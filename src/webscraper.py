@@ -9,7 +9,8 @@ class WebsiteScraper:
     von Texten aus einer Website.
     """
 
-    def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50):
+    def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50, 
+        excluded_keywords = ["impressum", "datenschutz", "agb"]):
         """
         :param start_url: Die Start-URL der Website, z.B. "https://www.example.com"
         :param max_pages: Maximale Anzahl Seiten, die gecrawlt werden.
@@ -19,6 +20,7 @@ class WebsiteScraper:
 
         # Hier speichern wir {URL: reiner_Text}
         self.scraped_data = {}
+        self.excluded_keywords = excluded_keywords
 
     def scrape_website(self):
         """
@@ -122,8 +124,8 @@ class WebsiteScraper:
         return self.scraped_data
 
 
-def prep_text(excluded_keywords = ["impressum", "datenschutz", "agb"], start_url = "https://www.rue-zahnspange.de/"):
-    scraper = WebsiteScraper(start_url=start_url, max_pages=20)
+def prep_text(self):
+    scraper = WebsiteScraper(start_url=self.start_url, max_pages=20)
     scraper.scrape_website()
     scraped_data = scraper.get_scraped_data()
 
@@ -133,7 +135,7 @@ def prep_text(excluded_keywords = ["impressum", "datenschutz", "agb"], start_url
     # Alle URLs sammeln, die KEINEN der ausgeschlossenen Begriffe enthalten
     for url in scraped_data.keys():
         # Schauen, ob einer der EXCLUDED_KEYWORDS im URL-String (kleingeschrieben) vorkommt
-        if any(keyword in url.lower() for keyword in excluded_keywords):
+        if any(keyword in url.lower() for keyword in self.excluded_keywords):
             # Falls ja, überspringen wir diese URL
             continue
         # Sonst nehmen wir sie auf
