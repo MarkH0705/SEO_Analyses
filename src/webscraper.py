@@ -124,8 +124,8 @@ class WebsiteScraper:
         return self.scraped_data
 
 
-def prep_text(self):
-    scraper = WebsiteScraper(start_url=self.start_url, max_pages=20)
+def prep_text():
+    scraper = WebsiteScraper(start_url="https://www.rue-zahnspange.de", max_pages=20)
     scraper.scrape_website()
     scraped_data = scraper.get_scraped_data()
 
