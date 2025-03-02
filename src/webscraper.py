@@ -22,7 +22,7 @@ class WebsiteScraper:
         self.scraped_data = {}
 
         # Liste für die gefilterten Texte
-        self.filtered_texts = []
+        self.filtered_texts = {}
 
     def scrape_website(self):
         """
@@ -103,19 +103,8 @@ class WebsiteScraper:
         return self.scraped_data
 
     def get_filtered_texts(self):
-        """
-        Filtert die gescrapten Texte anhand der ausgeschlossenen Keywords.
-        Gespeicherte Texte werden in `self.filtered_texts` abgelegt.
-        """
-        filtered_urls = []
-
-        # URLs sammeln, die KEINEN der ausgeschlossenen Begriffe enthalten
-        for url in self.scraped_data.keys():
-            if any(keyword in url.lower() for keyword in self.excluded_keywords):
-                continue
-            filtered_urls.append(url)
-
-        # Gefilterte Texte sammeln
-        self.filtered_texts = [self.scraped_data[url] for url in filtered_urls]
-
+        self.filtered_texts = {
+            url: text for url, text in self.scraped_data.items()
+            if not any(keyword in url.lower() for keyword in self.excluded_keywords)
+            }
         return self.filtered_texts  # Liste der gefilterten Texte zurückgeben
