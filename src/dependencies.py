@@ -1,4 +1,4 @@
-
+from google.colab import userdata, drive
 import os
 import requests
 from bs4 import BeautifulSoup, Comment
@@ -17,8 +17,10 @@ import re
 import json
 
 from collections import Counter
+import subprocess
+import sys
 
-
+import importlib
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
