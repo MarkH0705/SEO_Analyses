@@ -1,3 +1,8 @@
+import requests
+import chardet
+from urllib.parse import urljoin, urlparse
+from bs4 import BeautifulSoup, Comment
+
 class WebsiteScraper:
     """
     Diese Klasse kümmert sich ausschließlich um das Sammeln und Extrahieren
