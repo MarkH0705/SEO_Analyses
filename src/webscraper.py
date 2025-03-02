@@ -124,27 +124,26 @@ class WebsiteScraper:
         return self.scraped_data
 
 
-def prep_text():
-    scraper = WebsiteScraper(start_url="https://www.rue-zahnspange.de", max_pages=20)
-    scraper.scrape_website()
-    scraped_data = scraper.get_scraped_data()
+    def prep_text(self):
+        self.scrape_website()
+        scraped_data = self.get_scraped_data()
 
-    page_text_list = []
-    filtered_urls = []
+        page_text_list = []
+        filtered_urls = []
 
-    # Alle URLs sammeln, die KEINEN der ausgeschlossenen Begriffe enthalten
-    for url in scraped_data.keys():
-        # Schauen, ob einer der EXCLUDED_KEYWORDS im URL-String (kleingeschrieben) vorkommt
-        if any(keyword in url.lower() for keyword in self.excluded_keywords):
-            # Falls ja, überspringen wir diese URL
-            continue
-        # Sonst nehmen wir sie auf
-        filtered_urls.append(url)
+        # Alle URLs sammeln, die KEINEN der ausgeschlossenen Begriffe enthalten
+        for url in scraped_data.keys():
+            # Schauen, ob einer der EXCLUDED_KEYWORDS im URL-String (kleingeschrieben) vorkommt
+            if any(keyword in url.lower() for keyword in self.excluded_keywords):
+                # Falls ja, überspringen wir diese URL
+                continue
+            # Sonst nehmen wir sie auf
+            filtered_urls.append(url)
 
-        # 3. SEO-Analyse starten (für gefilterte Seiten)
-    for url in filtered_urls:
-        # Die gesamte Seite analysieren
-        page_text = scraped_data[url]
-        page_text_list.append(page_text)
+            # 3. SEO-Analyse starten (für gefilterte Seiten)
+        for url in filtered_urls:
+            # Die gesamte Seite analysieren
+            page_text = scraped_data[url]
+            page_text_list.append(page_text)
 
-    return filtered_urls, page_text_list
+        return filtered_urls, page_text_list
