@@ -1,24 +1,28 @@
 import requests
-import chardet
 from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup, Comment
 
 class WebsiteScraper:
     """
-    Diese Klasse kümmert sich ausschließlich um das Sammeln und Extrahieren
-    von Texten aus einer Website.
+    Diese Klasse kümmert sich um das Sammeln, Extrahieren und Filtern
+    von Texten aus einer Website. Zusätzlich ermöglicht sie eine SEO-Analyse.
     """
 
-    def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50):
+    def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50, excluded_keywords=None):
         """
-        :param start_url: Die Start-URL der Website, z.B. "https://www.example.com"
+        :param start_url: Die Start-URL der Website.
         :param max_pages: Maximale Anzahl Seiten, die gecrawlt werden.
+        :param excluded_keywords: Liste von Keywords, die in URLs nicht vorkommen sollen.
         """
         self.start_url = start_url
         self.max_pages = max_pages
+        self.excluded_keywords = excluded_keywords if excluded_keywords else ["impressum", "datenschutz", "agb"]
 
         # Hier speichern wir {URL: reiner_Text}
         self.scraped_data = {}
+
+        # Liste für die gefilterten Texte
+        self.filtered_texts = []
 
     def scrape_website(self):
         """
@@ -38,16 +42,13 @@ class WebsiteScraper:
             try:
                 response = requests.get(url, timeout=10)
 
-                # Rohdaten holen und Encoding per chardet bestimmen
+                # Rohdaten holen und Encoding setzen
                 raw_data = response.content
-                detected = chardet.detect(raw_data)
-                # Wenn chardet etwas erkennt, nehmen wir das. Sonst Standard "utf-8".
                 encoding = "utf-8"
                 text_data = raw_data.decode(encoding, errors="replace")
 
                 # Nur weiterverarbeiten, wenn HTML-Content
-                if (response.status_code == 200
-                    and "text/html" in response.headers.get("Content-Type", "")):
+                if response.status_code == 200 and "text/html" in response.headers.get("Content-Type", ""):
                     soup = BeautifulSoup(text_data, "html.parser")
 
                     # Text extrahieren
@@ -58,8 +59,7 @@ class WebsiteScraper:
                     for link in soup.find_all("a", href=True):
                         absolute_link = urljoin(url, link["href"])
                         if urlparse(absolute_link).netloc == domain:
-                            if (absolute_link not in visited
-                                and absolute_link not in to_visit):
+                            if absolute_link not in visited and absolute_link not in to_visit:
                                 to_visit.append(absolute_link)
 
             except requests.RequestException as e:
@@ -69,54 +69,53 @@ class WebsiteScraper:
         """
         Extrahiert aus <p>, <h1>, <h2>, <h3>, <li> reinen Text,
         aber NICHT die, die in .faq4_question oder .faq4_answer stecken.
-        Außerdem extrahiert er separat die FAQ-Fragen und -Antworten
-        (faq4_question / faq4_answer), damit wir beide Zeilenumbrüche
-        dort ebenfalls erhalten.
+        Außerdem extrahiert er separat die FAQ-Fragen und -Antworten.
         """
-
-        # 1) Script/Style/Noscript entfernen
         for script_or_style in soup(["script", "style", "noscript"]):
             script_or_style.decompose()
 
-        # 2) Kommentare entfernen
         for comment in soup.find_all(string=lambda text: isinstance(text, Comment)):
             comment.extract()
 
-        # 3) Normale Texte (p, h1, h2, h3, li), ABER nicht innerhalb von .faq4_question / .faq4_answer
         texts = []
         all_normal_tags = soup.find_all(["p", "h1", "h2", "h3", "li"])
         for tag in all_normal_tags:
-            # Prüfen, ob das Tag einen Vorfahren hat mit Klasse faq4_question oder faq4_answer
             if tag.find_parent(class_="faq4_question") or tag.find_parent(class_="faq4_answer"):
                 continue
-
-            # Hier wichtig: separator="\n", strip=False, damit wir Zeilenumbrüche behalten
             txt = tag.get_text(separator="\n", strip=False)
-            # Evtl. willst du doppelte Leerzeilen bereinigen. Das kannst du optional tun.
             if txt.strip():
                 texts.append(txt.strip("\r\n"))
 
-        # 4) FAQ-Bereiche (Fragen + Antworten)
         questions = soup.select(".faq4_question")
         answers = soup.select(".faq4_answer")
-
-        # 5) Zusammenführen (Frage + Antwort)
         for q, a in zip(questions, answers):
-            q_text = q.get_text(separator="\n", strip=False)
-            a_text = a.get_text(separator="\n", strip=False)
-            q_text = q_text.strip("\r\n")
-            a_text = a_text.strip("\r\n")
+            q_text = q.get_text(separator="\n", strip=False).strip("\r\n")
+            a_text = a.get_text(separator="\n", strip=False).strip("\r\n")
             if q_text and a_text:
-                combined = f"Frage: {q_text}\nAntwort: {a_text}"
-                texts.append(combined)
+                texts.append(f"Frage: {q_text}\nAntwort: {a_text}")
 
-        # 6) Als String zurückgeben. Wir trennen die einzelnen Elemente durch "\n\n"
-        #    (kannst du je nach Wunsch anpassen)
         return "\n\n".join(texts)
 
     def get_scraped_data(self):
         """
         Gibt das Dictionary {URL: Text} zurück.
-        Du kannst damit arbeiten, Seiten filtern, etc.
         """
         return self.scraped_data
+
+    def get_filtered_texts(self):
+        """
+        Filtert die gescrapten Texte anhand der ausgeschlossenen Keywords.
+        Gespeicherte Texte werden in `self.filtered_texts` abgelegt.
+        """
+        filtered_urls = []
+
+        # URLs sammeln, die KEINEN der ausgeschlossenen Begriffe enthalten
+        for url in self.scraped_data.keys():
+            if any(keyword in url.lower() for keyword in self.excluded_keywords):
+                continue
+            filtered_urls.append(url)
+
+        # Gefilterte Texte sammeln
+        self.filtered_texts = [self.scraped_data[url] for url in filtered_urls]
+
+        return self.filtered_texts  # Liste der gefilterten Texte zurückgeben
