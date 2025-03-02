@@ -122,3 +122,26 @@ class WebsiteScraper:
         Du kannst damit arbeiten, Seiten filtern, etc.
         """
         return self.scraped_data
+
+
+
+
+    def prep_text(self):
+
+        page_text_list = []
+        filtered_urls = []
+        
+        
+        for url in self.get_scraped_data().keys():
+        # Schauen, ob einer der EXCLUDED_KEYWORDS im URL-String (kleingeschrieben) vorkommt
+            if any(keyword in url.lower() for keyword in self.excluded_keywords):
+                # Falls ja, überspringen wir diese URL
+                continue
+            # Sonst nehmen wir sie auf
+            filtered_urls.append(url)
+
+
+            for url in filtered_urls:
+                # Die gesamte Seite analysieren
+                page_text = self.scraped_data[url]
+                page_text_list.append(page_text)
