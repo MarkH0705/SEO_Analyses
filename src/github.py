@@ -60,32 +60,3 @@ class GitHubManager:
         self.run_command("rm -rf cloned-repo")  # Aufräumen
 
         print("✅ Repository erfolgreich synchronisiert!")
-
-
-
-
-
-# Sicherstellen, dass src/ geladen ist
-import sys
-import os
-from google.colab import userdata 
-import github
-import importlib
-
-importlib.reload(github)
-
-
-from github import GitHubManager
-
-
-
-# Starte den GitHub-Sync
-git_manager = GitHubManager(
-    userdata.get("github_pat"),
-    userdata.get("github_email"),
-    userdata.get("github_username"),
-    userdata.get("github_repo_seo")
-)
-
-git_manager.clone_repo()  # Klonen des Repos
-git_manager.sync_project()  # Projekt in GitHub hochladen
