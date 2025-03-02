@@ -9,8 +9,7 @@ class WebsiteScraper:
     von Texten aus einer Website.
     """
 
-    def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50, 
-        excluded_keywords = ["impressum", "datenschutz", "agb"]):
+    def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50):
         """
         :param start_url: Die Start-URL der Website, z.B. "https://www.example.com"
         :param max_pages: Maximale Anzahl Seiten, die gecrawlt werden.
@@ -20,7 +19,6 @@ class WebsiteScraper:
 
         # Hier speichern wir {URL: reiner_Text}
         self.scraped_data = {}
-        self.excluded_keywords = excluded_keywords
 
     def scrape_website(self):
         """
@@ -122,26 +120,3 @@ class WebsiteScraper:
         Du kannst damit arbeiten, Seiten filtern, etc.
         """
         return self.scraped_data
-
-
-
-
-    def prep_text(self):
-
-        page_text_list = []
-        filtered_urls = []
-        
-        
-        for url in self.get_scraped_data().keys():
-        # Schauen, ob einer der EXCLUDED_KEYWORDS im URL-String (kleingeschrieben) vorkommt
-            if any(keyword in url.lower() for keyword in self.excluded_keywords):
-                # Falls ja, überspringen wir diese URL
-                continue
-            # Sonst nehmen wir sie auf
-            filtered_urls.append(url)
-
-
-            for url in filtered_urls:
-                # Die gesamte Seite analysieren
-                page_text = self.scraped_data[url]
-                page_text_list.append(page_text)
