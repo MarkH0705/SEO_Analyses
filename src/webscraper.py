@@ -122,28 +122,3 @@ class WebsiteScraper:
         Du kannst damit arbeiten, Seiten filtern, etc.
         """
         return self.scraped_data
-
-
-    def prep_text(self):
-        self.scrape_website()
-        scraped_data = self.get_scraped_data()
-
-        page_text_list = []
-        filtered_urls = []
-
-        # Alle URLs sammeln, die KEINEN der ausgeschlossenen Begriffe enthalten
-        for url in scraped_data.keys():
-            # Schauen, ob einer der EXCLUDED_KEYWORDS im URL-String (kleingeschrieben) vorkommt
-            if any(keyword in url.lower() for keyword in self.excluded_keywords):
-                # Falls ja, überspringen wir diese URL
-                continue
-            # Sonst nehmen wir sie auf
-            filtered_urls.append(url)
-
-            # 3. SEO-Analyse starten (für gefilterte Seiten)
-        for url in filtered_urls:
-            # Die gesamte Seite analysieren
-            page_text = scraped_data[url]
-            page_text_list.append(page_text)
-
-        return filtered_urls, page_text_list
