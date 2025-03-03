@@ -2,7 +2,7 @@ import os
 import subprocess
 
 class GitHubManager:
-    def __init__(self, pat, mail, user, repo):  # Jetzt ohne Default-Werte!
+    def __init__(self, pat, mail, user, repo, project):  # Jetzt ohne Default-Werte!
         """Holt GitHub-Zugangsdaten aus Google Colab Secrets."""
         self.github_pat = pat
         self.github_email = mail
@@ -12,7 +12,7 @@ class GitHubManager:
         if not all([self.github_pat, self.github_email, self.github_username, self.github_repo]):
             raise ValueError("⚠️ Fehlende GitHub-Secrets! Bitte Secrets in Google Colab setzen.")
 
-        self.project_path = "/content/drive/MyDrive/Colab\ Notebooks/SEO"  # Dein SEO-Projekt
+        self.project_path = project # Dein SEO-Projekt pfad
 
     def run_command(self, command, cwd=None):
         """Führt einen Shell-Befehl aus und gibt das Ergebnis zurück."""

@@ -1,16 +1,17 @@
 from google.colab import userdata, drive
 import os
 import requests
+
 from bs4 import BeautifulSoup, Comment
 from urllib.parse import urljoin, urlparse
 import chardet
-
 import dotenv
 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
 import openai
+
 import time
 
 import re
@@ -27,7 +28,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 import ast
 
-import numpy as np
+
 
 import nltk
 from nltk.corpus import stopwords
