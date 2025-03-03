@@ -31,7 +31,7 @@ def generate_llm_text(prompts, agents, **kwargs):
     response = cb.chat()
     return response
 
-def extract_sections_to_json(texts, keys):
+def extract_sections_to_json(keys, texts):
     """
     Extrahiert Abschnitte aus mehreren Texten und konvertiert sie in JSON.
     Gesucht werden die Überschriften 'Analyse', 'SEO', 'Erklärung' und der jeweils
