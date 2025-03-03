@@ -2,9 +2,7 @@ import json
 import os
 from chatbot import Chatbot
 
-def load_prompts(root, file_name):
-    file_path = os.path.join(root, file_name)
-
+def load_prompts(file_path):
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             prompts = json.load(file)
