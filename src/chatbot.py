@@ -6,10 +6,6 @@ from google.colab import userdata
 os.environ['OPENAI_API_KEY'] = userdata.get('open_ai_api_key')
 
 class Chatbot:
-    """
-    Diese Chatbot-Klasse nutzt die neue Methode client.chat.completions.create()
-    aus openai>=1.0.0 über openai.OpenAI().
-    """
 
     def __init__(self, systemprompt, prompt):
         self.client = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'])

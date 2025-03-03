@@ -1,5 +1,7 @@
+import json
 import os
-from utils import load_prompts, generate_llm_text, generate_llm_text_streaming
+import re
+from chatbot import Chatbot
 
 class LLMProcessor:
     """
@@ -15,8 +17,8 @@ class LLMProcessor:
         self.filtered_texts = filtered_texts
 
         # Prompts laden
-        self.analysis_prompts = load_prompts(os.path.join(project_root, "data/analysis_prompts.json"))
-        self.seo_prompts = load_prompts(os.path.join(project_root, "data/seo_prompts.json"))
+        self.analysis_prompts = self.load_prompts(os.path.join(project_root, "data/analysis_prompts.json"))
+        self.seo_prompts = self.load_prompts(os.path.join(project_root, "data/seo_prompts.json"))
 
         # Ergebnisse speichern
         self.keywords_raw = []
@@ -24,22 +26,54 @@ class LLMProcessor:
         self.keyword_city = None
         self.combined_analysis_dict = {}
 
+    @staticmethod
+    def load_prompts(file_path):
+        """Lädt eine JSON-Datei mit Prompts."""
+        try:
+            with open(file_path, "r", encoding="utf-8") as file:
+                prompts = json.load(file)
+            return prompts
+        except FileNotFoundError:
+            print(f"❌ Fehler: Die Datei {file_path} wurde nicht gefunden.")
+            return {}
+        except json.JSONDecodeError:
+            print(f"❌ Fehler: Die Datei {file_path} enthält ungültiges JSON.")
+            return {}
+
+    def generate_llm_text(self, prompts, agents, **kwargs):
+        """Generiert eine Standardantwort vom LLM mit den gegebenen Prompts."""
+        system_prompt = prompts[agents]["system_prompt"]
+        user_prompt = prompts[agents]["user_prompt"].format(**kwargs)
+
+        cb = Chatbot(system_prompt, user_prompt)
+        response = cb.chat()
+        return response
+
+    def generate_llm_text_streaming(self, prompts, agents, **kwargs):
+        """Generiert eine Streaming-Antwort vom LLM mit den gegebenen Prompts."""
+        system_prompt = prompts[agents]["system_prompt"]
+        user_prompt = prompts[agents]["user_prompt"].format(**kwargs)
+
+        cb = Chatbot(system_prompt, user_prompt)
+        response = cb.chat_with_streaming()
+        return response
+
     def extract_keywords(self):
         """Extrahiert die Keywords aus den gefilterten Texten."""
         self.keywords_raw = [
-            generate_llm_text(self.analysis_prompts, 'keyword_extraction', input_text_1=text)
+            self.generate_llm_text(self.analysis_prompts, 'keyword_extraction', input_text_1=text)
             for text in self.filtered_texts.values()
         ]
 
     def optimize_keywords(self):
         """Optimiert die extrahierten Keywords."""
-        self.keywords_final = generate_llm_text(
+        self.keywords_final = self.generate_llm_text(
             self.analysis_prompts, 'keyword_optimization', input_text_1=self.keywords_raw
         )
 
     def get_keyword_city(self):
         """Ermittelt die für SEO relevante Stadt."""
-        self.keyword_city = generate_llm_text(
+        self.keyword_city = self.generate_llm_text(
             self.analysis_prompts, 'keyword_city', input_text_1=list(self.filtered_texts.values())
         )
 
@@ -48,14 +82,14 @@ class LLMProcessor:
         for url, text in self.filtered_texts.items():
             print(f"\n=== Analyzing {url} ===")
 
-            self.combined_analysis_dict[url] = generate_llm_text_streaming(
+            self.combined_analysis_dict[url] = self.generate_llm_text_streaming(
                 self.seo_prompts,
                 'seo_optimization',
                 input_text_1=text,
                 stadt=self.keyword_city,
                 keywords_final=self.keywords_final
             )
-            
+
     def get_keywords(self):
         """
         Gibt die exakten Keywords zurück, die für die SEO-Optimierung verwendet wurden.
