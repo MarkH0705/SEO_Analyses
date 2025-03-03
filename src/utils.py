@@ -9,10 +9,10 @@ def load_prompts(file_path):
             prompts = json.load(file)
         return prompts
     except FileNotFoundError:
-        print(f"❌ Fehler: Die Datei {file_name} wurde nicht gefunden.")
+        print(f"❌ Fehler: Die Datei {file_path} wurde nicht gefunden.")
         return {}
     except json.JSONDecodeError:
-        print(f"❌ Fehler: Die Datei {file_name} enthält ungültiges JSON.")
+        print(f"❌ Fehler: Die Datei {file_path} enthält ungültiges JSON.")
         return {}
 
 def generate_llm_text_streaming(prompts, agents, **kwargs):
