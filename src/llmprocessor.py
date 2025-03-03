@@ -1,4 +1,3 @@
-
 import os
 from utils import load_prompts, generate_llm_text, generate_llm_text_streaming
 
@@ -56,6 +55,16 @@ class LLMProcessor:
                 stadt=self.keyword_city,
                 keywords_final=self.keywords_final
             )
+            
+    def get_keywords(self):
+        """
+        Gibt die exakten Keywords zurück, die für die SEO-Optimierung verwendet wurden.
+        """
+        return {
+            "keywords_raw": self.keywords_raw,
+            "keywords_final": self.keywords_final,
+            "keyword_city": self.keyword_city
+        }
 
     def run_all(self):
         """Führt alle Verarbeitungsschritte nacheinander aus."""

@@ -17,7 +17,6 @@ from bs4 import BeautifulSoup, Comment
 from urllib.parse import urljoin, urlparse
 import chardet
 import dotenv
-import ast
 import nltk
 from nltk.corpus import stopwords
 nltk.download('stopwords')
