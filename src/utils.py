@@ -16,8 +16,8 @@ def load_prompts(file_path):
 
 def generate_llm_text(prompts, agents, **kwargs):
     system_prompt = prompts[agents]["system_prompt"]
-    user_prompt = prompts[agents]["user_prompt_template"].format(**kwargs)
+    user_prompt = prompts[agents]["user_prompt"].format(**kwargs)
 
     cb = Chatbot(system_prompt, user_prompt)
-    response = cb.chat()
+    response = cb.chat_with_streaming()
     return response
