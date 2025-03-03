@@ -103,7 +103,7 @@ class WebsiteScraper:
         return self.scraped_data
 
     def get_filtered_texts(self):
-        self.get_scraped_data()
+        self.scrape_website()
         self.filtered_texts = {
             url: text for url, text in self.scraped_data.items()
             if not any(keyword in url.lower() for keyword in self.excluded_keywords)
