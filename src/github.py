@@ -46,6 +46,7 @@ class GitHubManager:
         self.run_command(f'git config user.email "{self.github_email}"')
         self.run_command(f'git config user.name "{self.github_username}"')
 
+        # ordner und dateitypen festlegen, die nach github gepusht werden sollen
         print("➕ Änderungen hinzufügen...")
         self.run_command("git add notebooks/*.ipynb src/*.py output/*.html output/*.pdf data/*.json README.md")
 

@@ -36,3 +36,5 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import torch
 from transformers import BertTokenizer, BertModel
+from sklearn.decomposition import PCA
+from sklearn.metrics.pairwise import cosine_similarity
