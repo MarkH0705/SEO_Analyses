@@ -47,7 +47,7 @@ class GitHubManager:
         self.run_command(f'git config user.name "{self.github_username}"')
 
         print("➕ Änderungen hinzufügen...")
-        self.run_command("git add notebooks/*.ipynb src/*.py output/*.html output/*.pdf README.md")
+        self.run_command("git add notebooks/*.ipynb src/*.py output/*.html output/*.pdf data/*.json README.md")
 
         print("📌 Änderungen committen...")
         commit_message = "🚀 Automatische Aktualisierung des SEO-Projekts"
