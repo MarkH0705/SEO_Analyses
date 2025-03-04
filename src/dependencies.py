@@ -6,17 +6,16 @@ import re
 import json
 import importlib
 import time
-from collections import Counter
 import subprocess
 import sys
 import string
-import seaborn as sns
 import asyncio
 
 from bs4 import BeautifulSoup, Comment
 from urllib.parse import urljoin, urlparse
 import chardet
 import dotenv
+from collections import Counter
 import nltk
 from nltk.corpus import stopwords
 nltk.download('stopwords')
@@ -29,6 +28,8 @@ import pypandoc
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D
 
 import openai
 from sklearn.feature_extraction.text import TfidfVectorizer

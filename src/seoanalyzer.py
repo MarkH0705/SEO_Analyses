@@ -1,4 +1,3 @@
-
 import json
 import re
 import numpy as np
@@ -11,13 +10,15 @@ from wordcloud import WordCloud
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.corpus import stopwords
+from datetime import datetime
+
 
 class SEOAnalyzer:
     """
     Diese Klasse analysiert den SEO-Optimierungseffekt, berechnet Statistiken & visualisiert die Ergebnisse.
     """
 
-    def __init__(self, seo_json, original_texts, keywords_final):
+    def __init__(self, seo_json, original_texts, keywords_final, historical_data=None):
         """
         :param seo_json: JSON mit den optimierten Texten und alten Website-Texten
         :param original_texts: Dictionary mit den originalen Website-Texten
@@ -34,6 +35,7 @@ class SEOAnalyzer:
         self.preprocessed_keywords = []
         self.nlp = spacy.load('de_core_news_sm')
         self.stop_words = set(stopwords.words('german'))
+        self.df_metrics = self.load_historical_data(historical_data)
 
     def text_stats(self, text):
         """Berechnet grundlegende Textstatistiken."""
@@ -158,3 +160,106 @@ class SEOAnalyzer:
 
         print("\n☁️ Wordcloud-Visualisierung:")
         self.generate_wordclouds()
+
+    @staticmethod
+    def load_historical_data(historical_data):
+        """Lädt historische SEO-Daten in einen Pandas DataFrame."""
+        if historical_data is None:
+            return None
+        
+        df = pd.DataFrame(historical_data)
+        df["Date"] = pd.to_datetime(df["Date"])  # Konvertiere das Datum in datetime-Format
+        return df
+
+    def plot_seo_trends(self):
+        """Visualisiert historische SEO-Daten mit Sitzungen, Conversion-Rate & Verweildauer."""
+        if self.df_metrics is None:
+            print("⚠️ Keine historischen SEO-Daten vorhanden.")
+            return
+
+        fig, ax1 = plt.subplots(figsize=(10, 5))
+
+        # Primäre y-Achse: Organische Sitzungen
+        ax1.plot(self.df_metrics['Date'], self.df_metrics['Organic_Sessions'], color='blue', marker='o', label='Organic Sessions')
+        ax1.set_xlabel('Datum')
+        ax1.set_ylabel('Anzahl organischer Sitzungen', color='blue')
+        ax1.tick_params(axis='y', labelcolor='blue')
+
+        # Sekundäre y-Achse: Conversion Rate
+        ax2 = ax1.twinx()
+        ax2.plot(self.df_metrics['Date'], self.df_metrics['Conversion_Rate'], color='red', marker='s', label='Conversion Rate')
+        ax2.set_ylabel('Conversion Rate', color='red')
+        ax2.tick_params(axis='y', labelcolor='red')
+
+        fig.tight_layout()
+        plt.title('Entwicklung der Sitzungen und Conversion Rate')
+        plt.show()
+
+        plt.figure(figsize=(10, 5))
+        plt.bar(self.df_metrics['Date'].dt.strftime('%b %Y'), self.df_metrics['Average_Time_on_Page'], color='green')
+        plt.title('Durchschnittliche Verweildauer pro Monat')
+        plt.xlabel('Monat')
+        plt.ylabel('Verweildauer in Sekunden')
+        plt.show()
+
+    def predict_future_sessions(self, months=6):
+        """Einfache lineare Prognose der organischen Sitzungen basierend auf historischen Daten."""
+        if self.df_metrics is None:
+            print("⚠️ Keine historischen SEO-Daten vorhanden.")
+            return
+        
+        X = np.arange(len(self.df_metrics)).reshape(-1, 1)  # Zeit als numerischen Wert nehmen
+        y = np.array(self.df_metrics["Organic_Sessions"])  # Zielvariable
+
+        # Einfache lineare Regression
+        from sklearn.linear_model import LinearRegression
+        model = LinearRegression()
+        model.fit(X, y)
+
+        future_X = np.arange(len(self.df_metrics), len(self.df_metrics) + months).reshape(-1, 1)
+        future_predictions = model.predict(future_X)
+
+        future_dates = pd.date_range(start=self.df_metrics["Date"].max(), periods=months, freq='ME')
+
+        # Visualisierung
+        plt.figure(figsize=(10, 5))
+        plt.plot(self.df_metrics["Date"], self.df_metrics["Organic_Sessions"], marker='o', label="Vergangene Sessions")
+        plt.plot(future_dates, future_predictions, marker='x', linestyle='dashed', label="Prognose Sessions")
+        plt.xlabel("Datum")
+        plt.ylabel("Organische Sitzungen")
+        plt.legend()
+        plt.title("Prognose der organischen Sitzungen für die nächsten Monate")
+        plt.show()
+
+    def predict_future_conversion_rate(self, months=6):
+        """Einfache Prognose der Conversion-Rate auf Basis der letzten Werte."""
+        if self.df_metrics is None:
+            print("⚠️ Keine historischen SEO-Daten vorhanden.")
+            return
+        
+        last_value = self.df_metrics["Conversion_Rate"].iloc[-1]
+        growth_rate = (self.df_metrics["Conversion_Rate"].iloc[-1] / self.df_metrics["Conversion_Rate"].iloc[0]) ** (1 / len(self.df_metrics)) - 1
+        future_values = [last_value * ((1 + growth_rate) ** i) for i in range(1, months + 1)]
+
+        future_dates = pd.date_range(start=self.df_metrics["Date"].max(), periods=months, freq='ME')
+
+        # Visualisierung
+        plt.figure(figsize=(10, 5))
+        plt.plot(self.df_metrics["Date"], self.df_metrics["Conversion_Rate"], marker='o', label="Vergangene Conversion Rate")
+        plt.plot(future_dates, future_values, marker='x', linestyle='dashed', label="Prognose Conversion Rate")
+        plt.xlabel("Datum")
+        plt.ylabel("Conversion Rate")
+        plt.legend()
+        plt.title("Prognose der Conversion-Rate für die nächsten Monate")
+        plt.show()
+
+    def run_models(self):
+        """Führt alle SEO- und Modellanalysen durch."""
+        print("\n📊 Historische SEO-Trends")
+        self.plot_seo_trends()
+
+        print("\n📈 Prognose der organischen Sitzungen")
+        self.predict_future_sessions()
+
+        print("\n📈 Prognose der Conversion-Rate")
+        self.predict_future_conversion_rate()
