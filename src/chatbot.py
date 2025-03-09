@@ -7,10 +7,10 @@ os.environ['OPENAI_API_KEY'] = userdata.get('open_ai_api_key')
 
 class Chatbot:
 
-    def __init__(self, systemprompt, prompt):
+    def __init__(self, systemprompt, userprompt):
         self.client = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'])
         self.systemprompt = systemprompt
-        self.prompt = prompt
+        self.prompt = userprompt
         self.context = [{"role": "system", "content": systemprompt}]
         self.model = "gpt-4o-mini-2024-07-18"
 
