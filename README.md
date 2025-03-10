@@ -103,8 +103,7 @@ seo_analyzer.run_analysis()
 
 ## 🎯 Ziele
 
-- ✅ Vollständige Automatisierung der SEO-Optimierung mittels Google Ads API
-- ✅ Langchain Pipeline
+- ✅ Vollständige Automatisierung der SEO-Optimierung
 - ✅ RAG für sprachliche Qualitätskontrolle
 - ✅ Kundenfertige PDF/HTML-Reports
 
@@ -118,3 +117,12 @@ seo_analyzer.run_analysis()
 
 Contributions und Ideen willkommen!  
 👉 Pull-Request oder Issue eröffnen.
+
+## 📩 Kontakt
+
+📧 [Deine E-Mail]  
+🌐 [Deine Website]
+
+## Lizenz
+
+MIT License
