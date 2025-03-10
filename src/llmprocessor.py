@@ -19,8 +19,8 @@ class LLMProcessor:
         self.google_ads_keywords = google_ads_keywords if google_ads_keywords else []
 
         # Prompts laden
-        self.analysis_prompts = self.load_prompts(os.path.join(project_root, "data/analysis_prompts.json"))
-        self.seo_prompts = self.load_prompts(os.path.join(project_root, "data/seo_prompts.json"))
+        self.analysis_prompts = self.load_prompts(os.path.join(project_root, "data/prompts/analysis_prompts.json"))
+        self.seo_prompts = self.load_prompts(os.path.join(project_root, "data/prompts/seo_prompts.json"))
 
         # Ergebnisse
         self.keywords_raw = []
