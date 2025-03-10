@@ -1,4 +1,4 @@
-README.md
+
 # 🚀 SEO Automation Pipeline mit OpenAI & Retrieval (RAG)
 
 Dieses Projekt bietet eine **komplette End-to-End-Pipeline für die SEO-Optimierung von Websites**, inklusive **Web-Scraping, SEO-Analyse, KI-gestützter Text-Optimierung und Qualitätskontrolle**.
@@ -117,3 +117,12 @@ seo_analyzer.run_analysis()
 
 Contributions und Ideen willkommen!  
 👉 Pull-Request oder Issue eröffnen.
+
+## 📩 Kontakt
+
+📧 [Deine E-Mail]  
+🌐 [Deine Website]
+
+## Lizenz
+
+MIT License
