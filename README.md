@@ -112,3 +112,17 @@ seo_analyzer.run_analysis()
 - [ ] Mehrsprachigkeit (aktuell Deutsch)
 - [ ] WordPress-Integration
 - [ ] Automatische SEO Scores
+
+## 🤝 Zusammenarbeit
+
+Contributions und Ideen willkommen!  
+👉 Pull-Request oder Issue eröffnen.
+
+## 📩 Kontakt
+
+📧 [Deine E-Mail]  
+🌐 [Deine Website]
+
+## Lizenz
+
+MIT License
