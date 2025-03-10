@@ -118,11 +118,6 @@ seo_analyzer.run_analysis()
 Contributions und Ideen willkommen!  
 👉 Pull-Request oder Issue eröffnen.
 
-## 📩 Kontakt
-
-📧 [Deine E-Mail]  
-🌐 [Deine Website]
-
 ## Lizenz
 
 MIT License
