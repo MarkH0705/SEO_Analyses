@@ -30,8 +30,8 @@ class LangchainSEOPipeline:
         # LangChain Chat-Modell
         self.llm = ChatOpenAI(
             temperature=0,
-            model="gpt-4o-mini-2024-07-18"
-            openai_api_key=os.environ['OPENAI_API_KEY'])
+            model="gpt-4o-mini-2024-07-18",
+            openai_api_key=os.environ['OPENAI_API_KEY'],)
 
     def load_prompt(self, file_name: str) -> ChatPromptTemplate:
         """
