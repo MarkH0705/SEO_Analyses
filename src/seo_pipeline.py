@@ -72,12 +72,18 @@ class LangchainSEOPipeline:
         messages = prompt_template.format_messages(original_text=original_text)
         response = self.llm(messages)
         return response.content.strip()
+        
 
     def optimize_text_for_seo(self, original_text: str, keywords: str) -> str:
         """
         Lädt optimize_seo.json, formt die Messages und ruft das LLM auf.
         Gibt den SEO-optimierten Text zurück.
         """
+        #agents = "optimize_seo"  # or whatever the correct key is
+        kwargs = {"original_text": original_text, "keywords": keywords}
+
+
+
         prompt_template = self.load_prompt("optimize_seo.json")
         # placeholders: {original_text}, {keywords}
         messages = prompt_template.format_messages(
@@ -86,6 +92,8 @@ class LangchainSEOPipeline:
         )
         response = self.llm(messages)
         return response.content.strip()
+     
+
 
     def grammar_and_style_check(self, optimized_text: str) -> str:
         """
