@@ -79,7 +79,6 @@ class LangchainSEOPipeline:
         Lädt optimize_seo.json, formt die Messages und ruft das LLM auf.
         Gibt den SEO-optimierten Text zurück.
         """
-        #agents = "optimize_seo"  # or whatever the correct key is
         kwargs = {"original_text": original_text, "keywords": keywords}
 
 
