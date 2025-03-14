@@ -8,6 +8,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] **Projektstruktur verbessern**: Ordner übersichtlich gestalten (z.B. `src/`, `data/`, `tests/`, `notebooks/`).
 - [ ] **Dokumentation erweitern**: READ_ME und Wiki (bzw. GitHub Pages) zu jedem Modul anlegen.
 - [ ] **Automatisierte Tests** Pytest für Kernfunktionen einrichten.
+- [ ] **Produkt für Kunden finalisieren**
 
 ---
 
