@@ -7,14 +7,14 @@ Mithilfe von **OpenAI (ChatGPT)** und einer **Retrieval Augmented Generation (RA
 
 ## 📚 Inhaltsverzeichnis
 
-- [Features](#features)
-- [Projektstruktur](#projektstruktur)
-- [Ablauf & Module](#ablauf--module)
-- [Technologien](#technologien)
-- [Installation](#installation)
-- [Nutzung](#nutzung)
-- [Ziele](#ziele)
-- [Roadmap](#roadmap)
+- Features
+- Projektstruktur
+- Ablauf & Module
+- Technologien
+- Installation
+- Nutzung
+- Ziele
+- Roadmap
 
 ## ✅ Features
 

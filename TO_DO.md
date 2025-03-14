@@ -9,6 +9,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] **Dokumentation erweitern**: READ_ME und Wiki (bzw. GitHub Pages) zu jedem Modul anlegen.
 - [ ] **Automatisierte Tests** Pytest für Kernfunktionen einrichten.
 - [ ] **Produkt für Kunden finalisieren**
+- [ ] **FAISS DB**: automatisierte Erweiterung bei neu gefundenen Fehlern**
 
 ---
 
@@ -45,7 +46,6 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 
 ## 5. **Abschluss & Integration**
 - [ ] **Dokumentation** aller Pipelines & Klassen in der README (oder in separater Doku)
-- [ ] **GitHub-Repo** publizieren (Entweder privat oder als Public Demo)
 - [ ] **Optionale WordPress-Integration** in der Zukunft (Ideenspeicher)
   - [ ] Upload via REST API
   - [ ] Metadaten (Title, Slug, Tags etc.)
