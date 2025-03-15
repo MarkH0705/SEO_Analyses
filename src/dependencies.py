@@ -38,3 +38,5 @@ import torch
 from transformers import BertTokenizer, BertModel
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
+
+import pytest
