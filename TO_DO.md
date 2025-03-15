@@ -5,11 +5,12 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 ---
 
 ## 1. **Allgemeine Projektorganisation**
-- [ ] **Projektstruktur verbessern**: Ordner übersichtlich gestalten (z.B. `src/`, `data/`, `tests/`, `notebooks/`).
+- [ ] **Projektstruktur verbessern**: Ordner übersichtlich gestalten (z.B. `src/`, `data/`, `tests/`, `notebooks/`, dependencies.py).
 - [ ] **Dokumentation erweitern**: READ_ME und Wiki (bzw. GitHub Pages) zu jedem Modul anlegen.
 - [ ] **Automatisierte Tests** Pytest für Kernfunktionen einrichten.
 - [ ] **Produkt für Kunden finalisieren**
 - [ ] **FAISS DB**: automatisierte Erweiterung bei neu gefundenen Fehlern**
+- [ ] **Template GitHub**: issues, pull-requests
 
 ---
 
@@ -46,13 +47,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 
 ## 5. **Abschluss & Integration**
 - [ ] **Dokumentation** aller Pipelines & Klassen in der README (oder in separater Doku)
+- [ ] **
 - [ ] **Optionale WordPress-Integration** in der Zukunft (Ideenspeicher)
   - [ ] Upload via REST API
   - [ ] Metadaten (Title, Slug, Tags etc.)
-
----
-
-## 6. **Nächste Schritte**
-- [ ] **Liste priorisieren**: Welche Punkte sind dringlich? Was kann warten?
-- [ ] **Zeitplan erstellen**: Welche Teilaufgaben, bis wann?
-- [ ] **Issues anlegen**: Jedes To-Do hier als eigenes Issue im GitHub-Repository, um Fortschritt zu tracken.
