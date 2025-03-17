@@ -13,6 +13,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] **Template GitHub**: issues
 - [ ] Funktionalitäten aus utils.py überdenken
 - [ ] langfristig Umstieg auf langchain
+- [ ] textprocessor durch openai function calling ersetzen
 
 ---
 
