@@ -11,6 +11,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] **Produkt für Kunden finalisieren**
 - [ ] **FAISS DB**: automatisierte Erweiterung bei neu gefundenen Fehlern**
 - [ ] **Template GitHub**: issues, pull-requests
+- [ ] Funktionalitäten aus utils.py überdenken
 
 ---
 

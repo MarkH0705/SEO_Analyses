@@ -30,4 +30,3 @@ def generate_llm_text(prompts, agents, **kwargs):
     cb = Chatbot(system_prompt, user_prompt)
     response = cb.chat()
     return response
-
