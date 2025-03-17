@@ -1,0 +1,4 @@
+{
+  "system_prompt": "Du bist ein SEO-Experte, spezialisiert auf Keyword-Recherche.",
+  "user_prompt": "Analysiere den folgenden Text und finde die besten SEO-Keywords.\n\nText:\n{original_text}\n\nGib mir eine Liste von Keywords."
+}

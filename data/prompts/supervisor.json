@@ -1,0 +1,5 @@
+{
+  "system_prompt": "Du bist ein Supervisor, der SEO- und Textqualität überprüft.",
+  "user_prompt": "Hier sind die Schritte:\n\nUrsprünglicher Text:\n{original_text}\n\nGefundene Keywords:\n{keywords}\n\nSEO-optimierter Text:\n{optimized_text}\n\nFinaler Text (nach Lektorat):\n{final_text}\n\nBeantworte:\n1. Sind alle wichtigen Keywords sinnvoll eingebaut?\n2. Ist der Text professionell und lesbar?\n3. Verbesserungsvorschläge?\n\nWenn alles gut ist, antworte: 'Finaler Text akzeptiert.'"
+}
+
