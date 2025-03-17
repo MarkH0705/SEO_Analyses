@@ -8,19 +8,19 @@ class LLMProcessor:
     Diese Klasse verwaltet alle Anfragen an das LLM und führt die Analyse & Optimierung durch.
     """
 
-    def __init__(self, project_root, filtered_texts, google_ads_keywords=None):
+    def __init__(self, prompt_path, filtered_texts, google_ads_keywords=None):
         """
         :param project_root: Der Hauptpfad des Projekts.
         :param filtered_texts: Das Dictionary {URL: Text}, das optimiert werden soll.
         :param google_ads_keywords: (Optional) Liste von Google Ads Keywords für die SEO-Optimierung.
         """
-        self.project_root = project_root
+        self.prompt_path = prompt_path
         self.filtered_texts = filtered_texts
         self.google_ads_keywords = google_ads_keywords if google_ads_keywords else []
 
         # Prompts laden
-        self.analysis_prompts = self.load_prompts(os.path.join(project_root, "data/prompts/analysis_prompts.json"))
-        self.seo_prompts = self.load_prompts(os.path.join(project_root, "data/prompts/seo_prompts.json"))
+        self.analysis_prompts = self.load_prompts(os.path.join(self.prompt_path, "analysis_prompts.json"))
+        self.seo_prompts = self.load_prompts(os.path.join(self.prompt_path, "seo_prompts.json"))
 
         # Ergebnisse
         self.keywords_raw = []
