@@ -2,7 +2,6 @@
 import pytest
 from chatbot import Chatbot
 
-# Beispiel-System- und User-Prompt (je nach Konstruktor definieren, anpassen falls nötig)
 system_prompt_test = "Du bist ein hilfreicher Assistent."
 user_prompt_test = "Das ist ein Test. Schreibe als Antwort 'Test erfolgreich'."
 
