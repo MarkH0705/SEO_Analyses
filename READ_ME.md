@@ -112,8 +112,3 @@ seo_analyzer.run_analysis()
 - [ ] Automatische Keyword-Erweiterung
 - [ ] Mehrsprachigkeit (aktuell Deutsch)
 - [ ] WordPress-Integration
-
-## 🤝 Zusammenarbeit
-
-Contributions und Ideen willkommen!
-👉 Pull-Request oder Issue eröffnen.
