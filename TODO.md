@@ -5,7 +5,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 ---
 
 ## 0. **Aktuelles und dringendes**
-- [ ] 18.3.2025 **Version missmatch**: numpy 2.2.3 und pandas 2.2.4 **side effects on**: dependencies.py
+- [ ] 18.3.2025 **Version missmatch**: numpy 2.2.3 und pandas 2.2.4 **side effects on**: dependencies.py, excelimporter.py
 
 ---
 
