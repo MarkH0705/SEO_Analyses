@@ -9,7 +9,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] **Dokumentation erweitern**: READ_ME und Wiki (bzw. GitHub Pages) zu jedem Modul anlegen.
 - [ ] **Automatisierte Tests** Pytest für Kernfunktionen ausbauen.
 - [ ] **Produkt für Kunden finalisieren**
-- [ ] **FAISS DB**: automatisierte Erweiterung bei neu gefundenen Fehlern**
+- [ ] **FAISS DB**: automatisierte Erweiterung bei neu gefundenen Fehlern
 - [ ] **Template GitHub**: issues
 - [ ] Funktionalitäten aus utils.py überdenken
 - [ ] langfristig Umstieg auf langchain

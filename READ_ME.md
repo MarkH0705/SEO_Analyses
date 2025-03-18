@@ -50,17 +50,14 @@ SEO-Project/
 - **src/webscraper.py**: Holt Inhalte von Webseiten, filtert irrelevante Seiten (z.B. Impressum, AGB).
 
 ### 2. **SEO-Optimierung mit OpenAI**
-- **src/llm_processor.py**:
+- **src/llmprocessor.py**:
   - Extrahiert Keywords aus den Inhalten.
   - Optimiert die Texte für SEO mit gezielten Prompts.
 
-### 3. **Fehlerkontrolle mit RAG**
-- **src/rag_checker.py**: Erstellt eine Vektordatenbank mit bekannten Fehlern und Korrekturen. Erkennt fehlerhafte Formulierungen via Cosine Similarity und optimiert mit ChatGPT.
-
-### 4. **Analyse & Visualisierung**
+### 3. **Analyse & Visualisierung**
 - **src/seoanalyzer.py**: Verarbeitet und analysiert die Original- und optimierten Texte.
 
-### 5. **GitHub Automation**
+### 4. **GitHub Automation**
 - **src/github.py**: Lädt finale Ergebnisse in ein GitHub-Repo hoch.
 
 ## 🧰 Technologien
