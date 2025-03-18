@@ -22,7 +22,7 @@ nltk.download('stopwords')
 from wordcloud import WordCloud
 from jinja2 import Template
 from playwright.async_api import async_playwright
-import spacy
+# import spacy
 import pypandoc
 
 import numpy as np

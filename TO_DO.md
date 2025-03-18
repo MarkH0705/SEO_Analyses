@@ -3,6 +3,9 @@
 Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 
 ---
+## 1. **Aktuelles und dringendes**
+- [ ] **Version missmatch**: numpy 2.2.3 und pandas 2.2.4
+
 
 ## 1. **Allgemeine Projektorganisation**
 - [ ] **Projektstruktur verbessern**: Ordner übersichtlich gestalten (z.B. `src/`, `data/`, `tests/`, `notebooks/`, dependencies.py).
@@ -14,6 +17,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] Funktionalitäten aus utils.py überdenken
 - [ ] langfristig Umstieg auf langchain
 - [ ] textprocessor durch openai function calling ersetzen
+- [ ] dependencies und versionen robuster machen
 
 ---
 
