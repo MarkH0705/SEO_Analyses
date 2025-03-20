@@ -5,7 +5,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 ---
 
 ## 0. **Aktuelles und dringendes**
-- [ ] 18.3.2025 **Version missmatch**: numpy 2.2.3 und spacy 3.5 **side effects on**: dependencies.py, excelimporter.py, Installation.ipynb **ursachen**: spacy version 3.5 verlangt numpy 1.26 -> version missmatch
+- [ ] 18.3.2025 **Version missmatch**: numpy 2.2.3 und spacy 3.5 **side effects on**: dependencies.py, excelimporter.py, Installation.ipynb **ursachen**: spacy version 3.5 verlangt numpy 1.26.4 -> version missmatch
 
 ---
 
