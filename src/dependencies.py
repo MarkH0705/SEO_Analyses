@@ -16,13 +16,13 @@ from urllib.parse import urljoin, urlparse
 import chardet
 import dotenv
 from collections import Counter
-import nltk
-from nltk.corpus import stopwords
-nltk.download('stopwords')
+# import nltk
+# from nltk.corpus import stopwords
+# nltk.download('stopwords')
 from wordcloud import WordCloud
 from jinja2 import Template
 from playwright.async_api import async_playwright
-import spacy
+# import spacy
 import pypandoc
 
 import numpy as np
