@@ -26,6 +26,14 @@ Mithilfe von **OpenAI (ChatGPT)** und einer **Retrieval Augmented Generation (RA
 - 📦 Ausgabe in **HTML und PDF** für Kunden
 - 📊 Umfangreiche **Datenvisualisierungen** (Wordclouds, Cosine Similarity, Keyword-Verteilung)
 
+
+
+
+<img src="https://drive.google.com/uc?id=10oR2bcugvN2MClp14ia7gnzMGX5b896t" alt="SEO Heatmap" width="600">
+
+
+
+
 ## 🗂️ Projektstruktur
 
 ```

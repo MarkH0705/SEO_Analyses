@@ -1,11 +1,14 @@
+import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from datetime import datetime
 
 class KeywordVisualizer:
 
-    def __init__(self, df):
+    def __init__(self, df, output_dir="output"):
         self.searches_df = df
+        self.output_dir = output_dir  # Speichert Bilder in diesem Ordner
 
     def should_use_log_scale(self, threshold=50):
         min_val = self.searches_df.replace(0, np.nan).min().min()
@@ -14,7 +17,7 @@ class KeywordVisualizer:
 
     def heatmap(self):
         plt.rcParams['font.family'] = 'DejaVu Sans'
-        plt.figure(figsize=(12, 6))
+        fig, ax = plt.subplots(figsize=(12, 6))  # 🎯 Explizite Figure & Axes
 
         use_log = self.should_use_log_scale()
 
@@ -27,19 +30,17 @@ class KeywordVisualizer:
             cmap_type = "RdYlGn"
             print("ℹ️ Normale Farbgebung aktiviert.")
 
-        # **Setze die Farbrange exakt auf min/max der echten Daten**
         real_min = max(self.searches_df.replace(0, np.nan).min().min(), 10)
         real_max = self.searches_df.max().max()
 
-        # 🎨 **Fix: Seaborn zwingen, die volle Farbskala zu nutzen!**
         ax = sns.heatmap(
             heatmap_data, 
             cmap=cmap_type, 
             annot=self.searches_df,  
             fmt=".0f",  
             linewidths=0.5,
-            vmin=np.log10(real_min),  # **Manuelle Untergrenze**
-            vmax=np.log10(real_max)   # **Manuelle Obergrenze**
+            vmin=np.log10(real_min),  
+            vmax=np.log10(real_max)   
         )
 
         plt.title("Google Ads Keyword-Suchvolumen (Heatmap)", fontsize=14, fontweight="bold")
@@ -48,21 +49,32 @@ class KeywordVisualizer:
 
         ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
 
-        # 🎨 **Colorbar perfekt anpassen**
         if use_log:
             colorbar = ax.collections[0].colorbar
-
-            # **1️⃣ Berechne log-Werte für Min/Max**
             log_min = np.log10(real_min)  
             log_max = np.log10(real_max)  
-
-            # **2️⃣ Setze exakte Ticks für log-Skala**
             num_ticks = 3  
             log_ticks = np.linspace(log_min, log_max, num_ticks)  
             real_values = [round(10**tick) for tick in log_ticks]  
-
-            # **3️⃣ Wende die korrekten Ticks an**
             colorbar.set_ticks(log_ticks)
             colorbar.set_ticklabels(real_values)
 
-        plt.show()
+        # **🔥 Speichern der Heatmap als Bild**
+        save_path = self.save_heatmap(fig)  # ⬅️ `fig` übergeben
+
+        # **🔥 Jetzt die Heatmap auch anzeigen**
+        plt.show()  # **Hier wird sie in Colab angezeigt!**
+        
+        return save_path  # Optional: Speicherpfad zurückgeben
+
+    def save_heatmap(self, fig):
+        """Speichert die Heatmap im Output-Ordner mit Timestamp."""
+        os.makedirs(self.output_dir, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d") # Hier ändern für timestamp
+        filename = f"heatmap_{timestamp}.png"
+        save_path = os.path.join(self.output_dir, filename)
+
+        fig.savefig(save_path, dpi=300, bbox_inches="tight")  # **Speichern**
+        print(f"✅ Heatmap gespeichert als: {save_path}")
+
+        return save_path  # Speicherpfad zurückgeben
