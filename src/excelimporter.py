@@ -1,5 +1,6 @@
 import os
-import pandas as pd
+# import pandas as pd
+import numpy as np
 from google.colab import drive
 
 class ExcelImporter:
