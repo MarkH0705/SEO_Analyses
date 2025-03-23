@@ -32,17 +32,13 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] **Einrichtung der DB** bei Projektstart (Neubau vs. Laden) vereinheitlichen
 - [ ] **Konfigurierbare Ähnlichkeits-Schwelle** (z.B. `threshold=0.6`) besser dokumentieren
 - [ ] **Dynamische Filter** für bestimmte Fehlerkategorien (z.B. Stil vs. Grammatik) überlegen
+- [ ] **hybrides system mit knowledge tree und RAG** etablieren
 
 ---
 
 ## 3. **SEO-Optimierungs-Pipeline (LangChain)**
-- [ ] **LangChain-Workflow** debuggen und lauffähig machen
-  - [ ] Placeholder & Prompt-Mapping für `format_messages(...)` beheben
-  - [ ] `.role` vs. `_role`-Konflikt lösen (Debug-Statements anpassen)
 - [ ] **Prompts in JSON-Dateien** verlagern (z.B. `/data/prompts/`) und sauber verlinken
-- [ ] **Google Ads Keywords** Integration:
-  - [ ] Nur LLM-Keyword-Extraktion aufrufen, wenn keine Google-Keywords vorliegen
-- [ ] **Supervisor-Feedback** integrieren (optional) & QA-Schritte definieren
+- [ ] **Supervisor-Feedback** integrieren & QA-Schritte definieren
 
 ---
 
