@@ -11,16 +11,19 @@ from wordcloud import WordCloud
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.corpus import stopwords
-from nltk.stem.snowball import GermanStemmer  # für einfaches Stemming
+from nltk.stem.snowball import GermanStemmer
+from datetime import datetime
 import nltk
 nltk.download('stopwords')
 
 class SEOAnalyzer:
-    def __init__(self, seo_json, keywords_final, output_dir="output", historical_data=None):
+    def __init__(self, seo_json, keywords_final, output_dir="output", historical_data=None, wordcloud_exclude=None):
         self.seo_json = seo_json
         self.keywords_final = keywords_final
         self.original_texts_list_clean = [seo_json[key]['alt'] for key in seo_json]
         self.optimized_texts_list_clean = [seo_json[key]['SEO'] for key in seo_json]
+
+        self.wordcloud_exclude = wordcloud_exclude
 
         self.stop_words = set(stopwords.words('german'))
         self.stemmer = GermanStemmer()
@@ -55,7 +58,7 @@ class SEOAnalyzer:
     def compute_similarity_scores(self):
         self.preprocessed_original = [self.preprocess_text(t) for t in self.original_texts_list_clean]
         self.preprocessed_optimized = [self.preprocess_text(t) for t in self.optimized_texts_list_clean]
-        self.preprocessed_keywords = self.keywords_final
+        self.preprocessed_keywords = [self.preprocess_text(k) for k in self.keywords_final]
 
         all_texts = self.preprocessed_original + self.preprocessed_optimized + self.preprocessed_keywords
         vectorizer = TfidfVectorizer()
@@ -92,24 +95,62 @@ class SEOAnalyzer:
         self.save_plot(fig, "similarity_scores")
         plt.show()
 
+        
     def generate_wordclouds(self):
-        all_original_text = ' '.join(self.original_texts_list_clean)
-        all_optimized_text = ' '.join(self.optimized_texts_list_clean)
+        """
+        Erstellt zwei Varianten von Wordclouds:
+        1. Gefiltert (mit Stemming)
+        2. Bereinigt (aber mit echten Wörtern)
+        """
 
-        wc_original = WordCloud(width=600, height=400, background_color='white').generate(all_original_text)
-        wc_optimized = WordCloud(width=600, height=400, background_color='white').generate(all_optimized_text)
 
-        fig, ax = plt.subplots(1, 2, figsize=(20, 10))
-        ax[0].imshow(wc_original, interpolation='bilinear')
-        ax[0].set_title('Wordcloud Original Texte')
-        ax[0].axis('off')
+        stopword_set = set(self.stop_words)
+        exclude_set = stopword_set.union(set(self.wordcloud_exclude))
 
-        ax[1].imshow(wc_optimized, interpolation='bilinear')
-        ax[1].set_title('Wordcloud SEO-Optimierte Texte')
-        ax[1].axis('off')
 
-        self.save_plot(fig, "wordclouds")
+        # 🔹 Variante 1: Gefiltert (Lemmas)
+        original_clean = ' '.join([self.preprocess_text(t) for t in self.original_texts_list_clean])
+        optimized_clean = ' '.join([self.preprocess_text(t) for t in self.optimized_texts_list_clean])
+
+        # 🔹 Variante 2: Echte Wörter (aber bereinigt)
+        def filter_words(text):
+            words = re.findall(r'\b\w+\b', text.lower())
+            filtered = [w for w in words if w not in exclude_set and len(w) > 2]
+            return ' '.join(filtered)
+
+        original_raw = filter_words(' '.join(self.original_texts_list_clean))
+        optimized_raw = filter_words(' '.join(self.optimized_texts_list_clean))
+
+        # 🎨 WordCloud Generator
+        def make_wc(text): 
+            return WordCloud(width=600, height=400, background_color='white').generate(text)
+
+        # 📊 Variante 1: Gefilterte (analytische) Wordcloud
+        fig1, ax1 = plt.subplots(1, 2, figsize=(20, 10))
+        ax1[0].imshow(make_wc(original_clean), interpolation='bilinear')
+        ax1[0].set_title('Wordcloud Original (gefiltert)')
+        ax1[0].axis('off')
+
+        ax1[1].imshow(make_wc(optimized_clean), interpolation='bilinear')
+        ax1[1].set_title('Wordcloud SEO (gefiltert)')
+        ax1[1].axis('off')
+
+        self.save_plot(fig1, "wordclouds_filtered")
         plt.show()
+
+        # 📊 Variante 2: Originaltext-basierte Wordcloud (bereinigt!)
+        fig2, ax2 = plt.subplots(1, 2, figsize=(20, 10))
+        ax2[0].imshow(make_wc(original_raw), interpolation='bilinear')
+        ax2[0].set_title('Wordcloud Original (bereinigt)')
+        ax2[0].axis('off')
+
+        ax2[1].imshow(make_wc(optimized_raw), interpolation='bilinear')
+        ax2[1].set_title('Wordcloud SEO (bereinigt)')
+        ax2[1].axis('off')
+
+        self.save_plot(fig2, "wordclouds_raw")
+        plt.show()
+
 
     def plot_seo_trends(self):
         if self.df_metrics is None:
@@ -176,6 +217,38 @@ class SEOAnalyzer:
         self.save_plot(fig, "conversion_forecast")
         plt.show()
 
+
+    def plot_keyword_distribution(self, keywords):
+        """Erstellt einen Vergleichs-Plot der Keyword-Verteilung."""
+        original_text = " ".join(self._raw_text(" ".join(self.original_texts)).split())
+        optimized_text = " ".join(self._raw_text(" ".join(self.optimized_texts)).split())
+
+        counts = {
+            "Keyword": [],
+            "Original": [],
+            "Optimiert": []
+        }
+
+        for kw in keywords:
+            counts["Keyword"].append(kw)
+            counts["Original"].append(original_text.count(kw.lower()))
+            counts["Optimiert"].append(optimized_text.count(kw.lower()))
+
+        df = pd.DataFrame(counts)
+        df_melt = df.melt(id_vars="Keyword", var_name="Typ", value_name="Anzahl")
+
+        plt.figure(figsize=(12, 6))
+        sns.barplot(x="Keyword", y="Anzahl", hue="Typ", data=df_melt)
+        plt.title("📊 Keyword-Verteilung in Original vs. SEO-Texten")
+        plt.xticks(rotation=45, ha="right")
+        plt.tight_layout()
+
+        timestamp = datetime.now().strftime("%Y%m")
+        filepath = os.path.join(self.output_dir, f"keyword_distribution_{timestamp}.png")
+        plt.savefig(filepath, dpi=300, bbox_inches="tight", transparent=True)
+        print(f"✅ Keyword-Plot gespeichert: {filepath}")
+        plt.show()        
+
     def run_analysis(self):
         print("🔍 Ähnlichkeitsanalyse gestartet...")
         avg_orig, avg_opt = self.compute_similarity_scores()
@@ -189,3 +262,103 @@ class SEOAnalyzer:
         self.predict_future_conversion_rate()
 
 
+
+class WordcloudVisualizer:
+    def __init__(self, original_texts, optimized_texts, output_dir="output", extra_stopwords=None):
+        self.original_texts = original_texts
+        self.optimized_texts = optimized_texts
+        self.output_dir = output_dir
+        os.makedirs(self.output_dir, exist_ok=True)
+
+        self.stop_words = set(stopwords.words('german'))
+        self.stemmer = GermanStemmer()
+
+        # Zusätzliche manuelle Ausschlusswörter
+        self.extra_stopwords = set(extra_stopwords) if extra_stopwords else set()
+
+    def _save_figure(self, fig, filename_base):
+        timestamp = datetime.now().strftime("%Y%m%d")
+        png_path = os.path.join(self.output_dir, f"{filename_base}_{timestamp}.png")
+        svg_path = os.path.join(self.output_dir, f"{filename_base}_{timestamp}.svg")
+
+        fig.savefig(png_path, dpi=300, bbox_inches="tight", transparent=True)
+        fig.savefig(svg_path, bbox_inches="tight", transparent=True)
+        print(f"✅ Wordcloud gespeichert: {png_path} & {svg_path}")
+        plt.close(fig)
+
+    def _filter_text(self, text):
+        text = text.lower()
+        text = re.sub(r"[^\w\s]", "", text)
+        tokens = text.split()
+        tokens = [t for t in tokens if t not in self.stop_words and t not in self.extra_stopwords and len(t) > 2]
+        return tokens
+
+    def _stem_text(self, text):
+        tokens = self._filter_text(text)
+        stemmed = [self.stemmer.stem(t) for t in tokens]
+        return " ".join(stemmed)
+
+    def _raw_text(self, text):
+        return " ".join(self._filter_text(text))
+
+    def generate_wordclouds(self):
+        """Erstellt Wordclouds (gefiltert + raw) für Original- und Optimierungstexte."""
+        # 🔹 Texte vorbereiten
+        original_raw = self._raw_text(" ".join(self.original_texts))
+        optimized_raw = self._raw_text(" ".join(self.optimized_texts))
+        original_filtered = self._stem_text(" ".join(self.original_texts))
+        optimized_filtered = self._stem_text(" ".join(self.optimized_texts))
+
+        def make_wc(text):
+            return WordCloud(width=800, height=500, background_color=None, mode="RGBA").generate(text)
+
+        # 🎨 1. GeFILTERTE WORDCLOUDS
+        fig1, ax1 = plt.subplots(1, 2, figsize=(20, 10))
+        ax1[0].imshow(make_wc(original_filtered), interpolation='bilinear')
+        ax1[0].set_title("Wordcloud Original (gefiltert)")
+        ax1[0].axis("off")
+        ax1[1].imshow(make_wc(optimized_filtered), interpolation='bilinear')
+        ax1[1].set_title("Wordcloud SEO (gefiltert)")
+        ax1[1].axis("off")
+        self._save_figure(fig1, "wordclouds_filtered")
+
+        # 🎨 2. BEREINIGTE WORTCLOUDS (ohne Stemming)
+        fig2, ax2 = plt.subplots(1, 2, figsize=(20, 10))
+        ax2[0].imshow(make_wc(original_raw), interpolation='bilinear')
+        ax2[0].set_title("Wordcloud Original (bereinigt)")
+        ax2[0].axis("off")
+        ax2[1].imshow(make_wc(optimized_raw), interpolation='bilinear')
+        ax2[1].set_title("Wordcloud SEO (bereinigt)")
+        ax2[1].axis("off")
+        self._save_figure(fig2, "wordclouds_raw")
+
+    def plot_keyword_distribution(self, keywords):
+        """Erstellt einen Vergleichs-Plot der Keyword-Verteilung."""
+        original_text = " ".join(self._raw_text(" ".join(self.original_texts)).split())
+        optimized_text = " ".join(self._raw_text(" ".join(self.optimized_texts)).split())
+
+        counts = {
+            "Keyword": [],
+            "Original": [],
+            "Optimiert": []
+        }
+
+        for kw in keywords:
+            counts["Keyword"].append(kw)
+            counts["Original"].append(original_text.count(kw.lower()))
+            counts["Optimiert"].append(optimized_text.count(kw.lower()))
+
+        df = pd.DataFrame(counts)
+        df_melt = df.melt(id_vars="Keyword", var_name="Typ", value_name="Anzahl")
+
+        plt.figure(figsize=(12, 6))
+        sns.barplot(x="Keyword", y="Anzahl", hue="Typ", data=df_melt)
+        plt.title("📊 Keyword-Verteilung in Original vs. SEO-Texten")
+        plt.xticks(rotation=45, ha="right")
+        plt.tight_layout()
+
+        timestamp = datetime.now().strftime("%Y%m%d")
+        filepath = os.path.join(self.output_dir, f"keyword_distribution_{timestamp}.png")
+        plt.savefig(filepath, dpi=300, bbox_inches="tight", transparent=True)
+        print(f"✅ Keyword-Plot gespeichert: {filepath}")
+        plt.show()
