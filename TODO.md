@@ -21,6 +21,7 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] langfristig Umstieg auf **langchain**
 - [ ] textprocessor durch openai **function calling** ersetzen
 - [ ] **dependencies** und versionen robuster machen
+- [ ] **bug reporting system** einrichten
 
 ---
 
