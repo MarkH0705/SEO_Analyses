@@ -95,10 +95,10 @@ pip install faiss-cpu sentence-transformers openai wordcloud matplotlib seaborn
 scraper = WebsiteScraper(start_url="https://www.example.com")
 scraper.scrape_website()
 
-llm_processor = LLMProcessor(PROJECT_ROOT, scraper.get_scraped_data())
+llm_processor = LLMProcessor(prompts_folder, get_filtered_texts, google_ads_keywords)
 llm_processor.run_all()
 
-seo_checker = SEORAGChecker(quality_checker, chatbot_system_prompt)
+seo_checker = SEOAnalyzer(quality_checker, chatbot_system_prompt)
 final_text = seo_checker.check_text(optimized_text)
 
 seo_analyzer = SEOAnalyzer(seo_json, original_texts, keywords_final)

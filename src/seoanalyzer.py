@@ -18,21 +18,14 @@ class SEOAnalyzer:
     Diese Klasse analysiert den SEO-Optimierungseffekt, berechnet Statistiken & visualisiert die Ergebnisse.
     """
 
-    def __init__(self, seo_json, original_texts, keywords_final, output_dir="output", historical_data=None):
+    def __init__(self, seo_json, keywords_final, output_dir="output", historical_data=None):
         self.seo_json = seo_json
-        self.original_texts = original_texts
         self.keywords_final = keywords_final
-
         self.original_texts_list_clean = [seo_json[key]['alt'] for key in seo_json]
         self.optimized_texts_list_clean = [seo_json[key]['SEO'] for key in seo_json]
-
         self.nlp = spacy.load('de_core_news_sm')
         self.stop_words = set(stopwords.words('german'))
-
-        # ✅ Hier wurde load_historical_data wieder hinzugefügt
         self.df_metrics = self.load_historical_data(historical_data)
-
-        # Output Ordner für Bilder
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
 
@@ -53,6 +46,14 @@ class SEOAnalyzer:
         filepath = os.path.join(self.output_dir, f"{filename}_{timestamp}.png")
         fig.savefig(filepath, dpi=300, bbox_inches="tight")
         print(f"✅ Plot gespeichert: {filepath}")
+
+
+    def preprocess_text(self, text):
+        """Bereitet Texte für NLP-Analysen vor (Tokenisierung, Stopwort-Entfernung)."""
+        text = text.lower()
+        doc = self.nlp(text)
+        tokens = [token.lemma_ for token in doc if token.text not in self.stop_words and token.is_alpha]
+        return ' '.join(tokens)
 
 
     def compute_similarity_scores(self):
@@ -87,14 +88,6 @@ class SEOAnalyzer:
         return avg_original_sim, avg_optimized_sim
 
 
-    def preprocess_text(self, text):
-        """Bereitet Texte für NLP-Analysen vor (Tokenisierung, Stopwort-Entfernung)."""
-        text = text.lower()
-        doc = self.nlp(text)
-        tokens = [token.lemma_ for token in doc if token.text not in self.stop_words and token.is_alpha]
-        return ' '.join(tokens)
-
-
     def visualize_similarity_scores(self, keywords_final, avg_original_sim, avg_optimized_sim):
         """Erstellt und speichert eine Balkendiagramm-Visualisierung der Similarities."""
         df_sim = pd.DataFrame({'Keywords': keywords_final, 'Original': avg_original_sim, 'Optimiert': avg_optimized_sim})
@@ -108,6 +101,7 @@ class SEOAnalyzer:
 
         self.save_plot(fig, "similarity_scores")
         plt.show()
+
 
     def generate_wordclouds(self):
         """Erstellt und speichert Wordclouds für Original- und SEO-optimierte Texte."""
@@ -128,6 +122,7 @@ class SEOAnalyzer:
 
         self.save_plot(fig, "wordclouds")
         plt.show()
+
 
     def plot_seo_trends(self):
         """Visualisiert historische SEO-Daten und speichert die Plots."""
@@ -151,6 +146,7 @@ class SEOAnalyzer:
 
         self.save_plot(fig, "seo_trends")
         plt.show()
+
 
     def predict_future_sessions(self, months=6):
         """Einfache lineare Prognose der organischen Sitzungen und speichert den Plot."""
@@ -180,6 +176,7 @@ class SEOAnalyzer:
         self.save_plot(fig, "session_forecast")
         plt.show()
 
+
     def predict_future_conversion_rate(self, months=6):
         """Einfache Prognose der Conversion-Rate und speichert den Plot."""
         if self.df_metrics is None:
@@ -201,7 +198,6 @@ class SEOAnalyzer:
 
         self.save_plot(fig, "conversion_forecast")
         plt.show()
-
 
 
     def run_analysis(self):
