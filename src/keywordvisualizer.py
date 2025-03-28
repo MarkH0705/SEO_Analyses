@@ -70,7 +70,7 @@ class KeywordVisualizer:
     def save_heatmap(self, fig):
         """Speichert die Heatmap im Output-Ordner mit Timestamp."""
         os.makedirs(self.output_dir, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m") # Hier ändern für timestamp
+        timestamp = datetime.now().strftime("%Y") # Hier ändern für timestamp
         filename = f"heatmap_{timestamp}.png"
         save_path = os.path.join(self.output_dir, filename)
 

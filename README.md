@@ -41,6 +41,8 @@ SEO-Project/
 ├── data/                # Prompts, Fehler-Korrektur-Daten, weitere JSON Dateien
 ├── notebooks/           # Colab/Notebooks zum Starten und Entwickeln
 ├── output/              # Erzeugte Dateien (HTML, PDF, Bilder)
+│   ├── final           # Dokumente für Kunden (HTML, PDF)
+│   └── images          # Visualisierungen
 ├── src/                # Source Code (Python-Klassen und Module)
 │   ├── webscraper.py    # Webscraping und Text-Extraktion
 │   ├── llmprocessor.py # Anbindung an OpenAI API, Keyword Extraktion
