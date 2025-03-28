@@ -64,7 +64,7 @@ class SEOAnalyzer:
         Speichert einen Matplotlib-Plot als PNG im Output-Ordner.
         Gibt den Dateipfad zurück.
         """
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now().strftime("%Y")
         filepath = os.path.join(self.output_dir, f"{filename}_{timestamp}.png")
         fig.savefig(filepath, dpi=300, bbox_inches="tight")
         plt.close(fig)  # Wichtig: Figure schließen, um Speicher zu sparen
@@ -152,51 +152,57 @@ class SEOAnalyzer:
         2. Bereinigt (nur Stopwords + Blacklist)
         Gibt Dictionary mit Pfaden zurück: {"filtered":..., "raw":...}
         """
+        def safe_make_wc(text):
+            if not text.strip():
+                # Falls String leer => Placeholder
+                print("⚠️ Wordcloud: Keine Wörter enthalten. Verwende Platzhaltertext.")
+                text = "leer"
+            return WordCloud(width=600, height=400, background_color='white').generate(text)
 
-        # 1) Gefilterte Variante
+        # (A) Gefilterte Variante
         original_clean = ' '.join([self.preprocess_text(t) for t in self.original_texts_list_clean])
         optimized_clean = ' '.join([self.preprocess_text(t) for t in self.optimized_texts_list_clean])
 
-        # 2) Raw-Variante: nur Stopwords + extra
-        exclude_set = set(self.stop_words).union(self.wordcloud_exclude)
-
-        def filter_words(text):
-            words = re.findall(r'\\b\\w+\\b', text.lower())
-            return ' '.join([w for w in words if w not in exclude_set and len(w) > 2])
-
-        original_raw = filter_words(' '.join(self.original_texts_list_clean))
-        optimized_raw = filter_words(' '.join(self.optimized_texts_list_clean))
-
-        def make_wc(text):
-            return WordCloud(width=600, height=400, background_color='white').generate(text)
-
-        # 🔹 (A) Gefilterte Wordcloud
         fig1, ax1 = plt.subplots(1, 2, figsize=(20, 10))
-        ax1[0].imshow(make_wc(original_clean), interpolation='bilinear')
+        wc_orig_clean = safe_make_wc(original_clean)
+        wc_opt_clean = safe_make_wc(optimized_clean)
+
+        ax1[0].imshow(wc_orig_clean, interpolation='bilinear')
         ax1[0].set_title('Wordcloud Original (gefiltert)')
         ax1[0].axis('off')
 
-        ax1[1].imshow(make_wc(optimized_clean), interpolation='bilinear')
+        ax1[1].imshow(wc_opt_clean, interpolation='bilinear')
         ax1[1].set_title('Wordcloud SEO (gefiltert)')
         ax1[1].axis('off')
 
         path_filtered = self.save_plot(fig1, "wordclouds_filtered")
         plt.show()
 
-        # 🔹 (B) Raw-Variante
+        # (B) Raw-Variante
+        exclude_set = set(self.stop_words).union(self.wordcloud_exclude)
+        
+        def filter_words(text):
+            words = re.findall(r'\b\w+\b', text.lower())
+            return ' '.join([w for w in words if w not in exclude_set and len(w) > 2])
+
+        original_raw = filter_words(' '.join(self.original_texts_list_clean))
+        optimized_raw = filter_words(' '.join(self.optimized_texts_list_clean))
+
         fig2, ax2 = plt.subplots(1, 2, figsize=(20, 10))
-        ax2[0].imshow(make_wc(original_raw), interpolation='bilinear')
+        wc_orig_raw = safe_make_wc(original_raw)
+        wc_opt_raw = safe_make_wc(optimized_raw)
+
+        ax2[0].imshow(wc_orig_raw, interpolation='bilinear')
         ax2[0].set_title('Wordcloud Original (bereinigt)')
         ax2[0].axis('off')
 
-        ax2[1].imshow(make_wc(optimized_raw), interpolation='bilinear')
+        ax2[1].imshow(wc_opt_raw, interpolation='bilinear')
         ax2[1].set_title('Wordcloud SEO (bereinigt)')
         ax2[1].axis('off')
 
         path_raw = self.save_plot(fig2, "wordclouds_raw")
         plt.show()
 
-        # 🔹 Pfade ins Dictionary + return
         self.image_paths["wordcloud_filtered"] = path_filtered
         self.image_paths["wordcloud_raw"] = path_raw
 
