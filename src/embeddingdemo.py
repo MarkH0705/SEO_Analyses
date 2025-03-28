@@ -1,26 +1,30 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import torch
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn.decomposition import PCA
-from sklearn.metrics.pairwise import cosine_similarity
-from transformers import BertTokenizer, BertModel
-import plotly.graph_objects as go
-
+import os
+from datetime import datetime
+import kaleido
 
 class EmbeddingDemo:
-    """
-    Diese Klasse visualisiert und analysiert semantische Ähnlichkeiten mithilfe von Embeddings.
-    """
-
-    def __init__(self):
-        """Lädt das BERT-Modell für Embeddings."""
+    def __init__(self, output_dir="output"):
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.model = BertModel.from_pretrained('bert-base-uncased')
+        self.output_dir = output_dir
+        os.makedirs(self.output_dir, exist_ok=True)
+
+    def _save_matplotlib(self, fig, name, transparent=False):
+        timestamp = datetime.now().strftime("%Y%m%d")
+        file_path = os.path.join(self.output_dir, f"{name}_{timestamp}.png")
+        fig.savefig(file_path, dpi=300, bbox_inches='tight', transparent=transparent)
+        print(f"✅ Plot gespeichert: {file_path}")
+        plt.close(fig)
+
+    def _save_plotly(self, fig, name):
+        timestamp = datetime.now().strftime("%Y%m%d")
+        path_png = os.path.join(self.output_dir, f"{name}_{timestamp}.png")
+        path_svg = os.path.join(self.output_dir, f"{name}_{timestamp}.svg")
+        fig.write_image(path_png)
+        fig.write_image(path_svg)
+        print(f"✅ Plot gespeichert: {path_png} / {path_svg}")
 
     def plot_3d_keyword_similarity(self, title="Keyword Cloud Similarity Visualization"):
-        """Visualisiert Keywords, Original- und optimierte Texte in einem 3D-Plot."""
         fig = plt.figure(figsize=(14, 10))
         ax = fig.add_subplot(111, projection='3d')
 
@@ -42,16 +46,14 @@ class EmbeddingDemo:
         ax.set_zlabel('Z Axis')
         ax.legend()
 
-        plt.show()
+        self._save_matplotlib(fig, "embedding_keyword_3d", transparent=False)
 
     def plot_cosine_similarity_steps(self):
-        """Visualisiert Cosine Similarity in drei Schritten."""
         fig = plt.figure(figsize=(18, 6))
 
         ax1 = fig.add_subplot(131, projection='3d')
         vec1 = np.array([0.8, 0.6, 0.3])
         vec2 = np.array([0.9, 0.4, 0.5])
-
         ax1.quiver(0, 0, 0, vec1[0], vec1[1], vec1[2], color='r', label='Old Text', arrow_length_ratio=0.1)
         ax1.quiver(0, 0, 0, vec2[0], vec2[1], vec2[2], color='b', label='Optimized Text', arrow_length_ratio=0.1)
         ax1.set_xlim([0, 1])
@@ -70,35 +72,36 @@ class EmbeddingDemo:
         ax3.bar(['Cosine Similarity'], [cos_sim], color='green')
         ax3.set_title('Step 3: Cosine Similarity')
 
-        plt.show()
+        self._save_matplotlib(fig, "cosine_similarity_steps", transparent=True)
 
-    def get_bert_embedding(self, word):
-        """Berechnet das BERT-Embedding für ein Wort."""
-        inputs = self.tokenizer(word, return_tensors='pt')
-        outputs = self.model(**inputs)
-        return outputs.last_hidden_state.mean(dim=1).detach().numpy().flatten()
+    def plot_3d_cosine_comparison_with_labels(self):
+        fig = plt.figure(figsize=(14, 10))
+        ax = fig.add_subplot(111, projection='3d')
 
-    def calculate_pairwise_distances(self, word_pairs, words):
-        """Berechnet paarweise Distanzen für Wortpaare mit BERT-Embeddings."""
-        bert_embeddings = np.array([self.get_bert_embedding(word) for word in words])
-        distance_results = []
+        vec_keywords = np.array([0.8, 0.7, 0.6])
+        vec_old_text = np.array([0.4, 0.3, 0.2])
+        vec_optimized_text = np.array([0.6, 0.5, 0.4])
 
-        for (word1, word2, word3, word4) in word_pairs:
-            idx1, idx2, idx3, idx4 = words.index(word1), words.index(word2), words.index(word3), words.index(word4)
-            distance1 = np.linalg.norm(bert_embeddings[idx1] - bert_embeddings[idx2])
-            distance2 = np.linalg.norm(bert_embeddings[idx3] - bert_embeddings[idx4])
+        ax.quiver(0, 0, 0, *vec_keywords, color='#4CAF50', label='SEO Keywords', arrow_length_ratio=0.1)
+        ax.quiver(0, 0, 0, *vec_old_text, color='#FF5733', label='Old Text', arrow_length_ratio=0.1)
+        ax.quiver(0, 0, 0, *vec_optimized_text, color='#1E90FF', label='Optimized Text', arrow_length_ratio=0.1)
 
-            distance_results.append({
-                "Word Pair 1": f"{word1} - {word2}",
-                "Distance 1": round(distance1, 2),
-                "Word Pair 2": f"{word3} - {word4}",
-                "Distance 2": round(distance2, 2)
-            })
+        ax.text(*vec_keywords, 'SEO Keywords', color='#4CAF50', fontsize=12)
+        ax.text(*vec_old_text, 'Old Text', color='#FF5733', fontsize=12)
+        ax.text(*vec_optimized_text, 'Optimized Text', color='#1E90FF', fontsize=12)
 
-        return pd.DataFrame(distance_results)
+        ax.set_xlim([0, 1])
+        ax.set_ylim([0, 1])
+        ax.set_zlim([0, 1])
+        ax.set_title("3D Cosine Similarity: Keywords vs Texte")
+        ax.set_xlabel('X Axis')
+        ax.set_ylabel('Y Axis')
+        ax.set_zlabel('Z Axis')
+        ax.legend()
+
+        self._save_matplotlib(fig, "cosine_comparison_3d", transparent=True)
 
     def plot_bert_embeddings_3d(self, words, relationships=None):
-        """Erstellt eine interaktive 3D-Visualisierung der BERT-Wort-Embeddings mit Pfeilen für Beziehungen."""
         bert_embeddings = np.array([self.get_bert_embedding(word) for word in words])
         pca = PCA(n_components=3)
         bert_embeddings_3d = pca.fit_transform(bert_embeddings)
@@ -139,57 +142,43 @@ class EmbeddingDemo:
             showlegend=False
         )
 
-        fig.show()
+        self._save_plotly(fig, "bert_embeddings_3d")
 
+    def get_bert_embedding(self, word):
+        inputs = self.tokenizer(word, return_tensors='pt')
+        outputs = self.model(**inputs)
+        return outputs.last_hidden_state.mean(dim=1).detach().numpy().flatten()
 
-    # 3D Visualization with vector names instead of cosine similarity values
-    def plot_3d_cosine_comparison_with_labels(self):
-        fig = plt.figure(figsize=(14, 10))
-        ax = fig.add_subplot(111, projection='3d')
+    def calculate_pairwise_distances(self, word_pairs, words):
+        bert_embeddings = np.array([self.get_bert_embedding(word) for word in words])
+        distance_results = []
 
-        # Adjusted vectors for SEO keywords, old text, and optimized text
-        vec_keywords = np.array([0.8, 0.7, 0.6])
-        vec_old_text = np.array([0.4, 0.3, 0.2])
-        vec_optimized_text = np.array([0.6, 0.5, 0.4])
+        for (word1, word2, word3, word4) in word_pairs:
+            idx1, idx2, idx3, idx4 = words.index(word1), words.index(word2), words.index(word3), words.index(word4)
+            distance1 = np.linalg.norm(bert_embeddings[idx1] - bert_embeddings[idx2])
+            distance2 = np.linalg.norm(bert_embeddings[idx3] - bert_embeddings[idx4])
+            distance_results.append({
+                "Word Pair 1": f"{word1} - {word2}",
+                "Distance 1": round(distance1, 2),
+                "Word Pair 2": f"{word3} - {word4}",
+                "Distance 2": round(distance2, 2)
+            })
 
-        # Plot vectors with improved color scheme
-        ax.quiver(0, 0, 0, vec_keywords[0], vec_keywords[1], vec_keywords[2], color='#4CAF50', label='SEO Keywords', arrow_length_ratio=0.1)
-        ax.quiver(0, 0, 0, vec_old_text[0], vec_old_text[1], vec_old_text[2], color='#FF5733', label='Old Text', arrow_length_ratio=0.1)
-        ax.quiver(0, 0, 0, vec_optimized_text[0], vec_optimized_text[1], vec_optimized_text[2], color='#1E90FF', label='Optimized Text', arrow_length_ratio=0.1)
-
-        # Add labels to the vector tips
-        ax.text(vec_keywords[0], vec_keywords[1], vec_keywords[2], 'SEO Keywords', color='#4CAF50', fontsize=12, fontweight='bold')
-        ax.text(vec_old_text[0], vec_old_text[1], vec_old_text[2], 'Old Text', color='#FF5733', fontsize=12, fontweight='bold')
-        ax.text(vec_optimized_text[0], vec_optimized_text[1], vec_optimized_text[2], 'Optimized Text', color='#1E90FF', fontsize=12, fontweight='bold')
-
-        # Plot settings
-        ax.set_xlim([0, 1])
-        ax.set_ylim([0, 1])
-        ax.set_zlim([0, 1])
-        ax.set_title("3D Cosine Similarity: SEO Keywords vs Old Text vs Optimized Text\nWith Labels")
-        ax.set_xlabel('X Axis')
-        ax.set_ylabel('Y Axis')
-        ax.set_zlabel('Z Axis')
-        ax.legend()
-
-        plt.show()
-
-
-
+        return pd.DataFrame(distance_results)
 
     def run_all_visualizations(self):
-        """Führt alle Visualisierungen und Analysen aus."""
-        print("\n📊 3D-Keyword Similarity")
+        print("\n📊 3D Keyword Similarity")
         self.plot_3d_keyword_similarity()
 
         print("\n🔍 Cosine Similarity Steps")
         self.plot_cosine_similarity_steps()
 
-        print("\n🔍 Cosine Comparision")
+        print("\n📍 Vergleich als Vektoren")
         self.plot_3d_cosine_comparison_with_labels()
 
-        print("\n📌 3D BERT Embedding Visualization")
+        print("\n🧠 BERT Embeddings Visualisierung")
         words = ["king", "queen", "man", "woman", "red", "yellow", "banana", "apple", "day", "sun", "night", "moon"]
-        relationships = [("king", "man", "crimson"), ("queen", "woman", "crimson"), ("apple", "red", "olivedrab"),
-                         ("banana", "yellow", "olivedrab"), ("day", "sun", "orange"), ("night", "moon", "orange")]
+        relationships = [("king", "man", "crimson"), ("queen", "woman", "crimson"),
+                         ("apple", "red", "olivedrab"), ("banana", "yellow", "gold"),
+                         ("day", "sun", "orange"), ("night", "moon", "purple")]
         self.plot_bert_embeddings_3d(words, relationships)
