@@ -42,7 +42,7 @@ class SEOAnalyzer:
         return df
 
     def save_plot(self, fig, filename):
-        timestamp = datetime.now().strftime("%Y%m%d")
+        timestamp = datetime.now().strftime("%Y%m")
         filepath = os.path.join(self.output_dir, f"{filename}_{timestamp}.png")
         fig.savefig(filepath, dpi=300, bbox_inches="tight")
         print(f"✅ Plot gespeichert: {filepath}")
