@@ -1,6 +1,15 @@
 import os
 from datetime import datetime
 import kaleido
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import torch
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.decomposition import PCA
+from sklearn.metrics.pairwise import cosine_similarity
+from transformers import BertTokenizer, BertModel
+import plotly.graph_objects as go
 
 class EmbeddingDemo:
     def __init__(self, output_dir="output"):
@@ -10,14 +19,14 @@ class EmbeddingDemo:
         os.makedirs(self.output_dir, exist_ok=True)
 
     def _save_matplotlib(self, fig, name, transparent=False):
-        timestamp = datetime.now().strftime("%Y%m%d")
+        timestamp = datetime.now().strftime("%Y")
         file_path = os.path.join(self.output_dir, f"{name}_{timestamp}.png")
         fig.savefig(file_path, dpi=300, bbox_inches='tight', transparent=transparent)
         print(f"✅ Plot gespeichert: {file_path}")
         plt.close(fig)
 
     def _save_plotly(self, fig, name):
-        timestamp = datetime.now().strftime("%Y%m%d")
+        timestamp = datetime.now().strftime("%Y")
         path_png = os.path.join(self.output_dir, f"{name}_{timestamp}.png")
         path_svg = os.path.join(self.output_dir, f"{name}_{timestamp}.svg")
         fig.write_image(path_png)

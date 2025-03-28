@@ -40,15 +40,16 @@ Mithilfe von **OpenAI (ChatGPT)** und einer **Retrieval Augmented Generation (RA
 SEO-Project/
 ├── data/                # Prompts, Fehler-Korrektur-Daten, weitere JSON Dateien
 ├── notebooks/           # Colab/Notebooks zum Starten und Entwickeln
+├── output/              # Erzeugte Dateien (HTML, PDF, Bilder)
 ├── src/                # Source Code (Python-Klassen und Module)
 │   ├── webscraper.py    # Webscraping und Text-Extraktion
-│   ├── llm_processor.py # Anbindung an OpenAI API, Keyword Extraktion
+│   ├── llmprocessor.py # Anbindung an OpenAI API, Keyword Extraktion
 │   ├── chatbot.py       # Zentrale Chatbot-Klasse zur Kommunikation mit GPT
 │   ├── seoanalyzer.py   # Analyse und Auswertung der Texte
 │   ├── github.py        # Automatischer Upload ins GitHub Repo
-│   ├── rag_checker.py   # RAG-Modul für Fehlerkorrektur via FAISS
 │   ├── utils.py         # Hilfsmodule (z.B. für Prompt-Management)
-│   └── embedding_demo.py# 3D Embedding- und Cosine Similarity Visualisierungen
+│   └── embeddingdemo.py# 3D Embedding- und Cosine Similarity Visualisierungen
+├── tests/              # pytest der Hauptfunktionalitäten
 └── requirements.txt    # Python-Abhängigkeiten
 ```
 
