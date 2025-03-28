@@ -1,6 +1,6 @@
 # 🚀 SEO Automation Pipeline mit OpenAI & Retrieval (RAG)
 
-Dieses Projekt bietet eine **komplette End-to-End-Pipeline für die SEO-Optimierung von Websites**, inklusive **Web-Scraping, SEO-Analyse, KI-gestützter Text-Optimierung und Qualitätskontrolle**.
+Dieses Projekt bietet eine **komplette End-to-End-Pipeline für die SEO-Optimierung von Websites**, inklusive **Web-Crawling, SEO-Analyse, KI-gestützter Text-Optimierung und Qualitätskontrolle**.
 
 Kern des Projekts sind **automatisierte Abläufe**, die von der **Datengewinnung bis zur SEO-optimierten Textgenerierung** reichen.
 Mithilfe von **OpenAI (ChatGPT)** und einer **Retrieval Augmented Generation (RAG)-Architektur** wird sichergestellt, dass die finalen Texte nicht nur **SEO-freundlich**, sondern auch **grammatikalisch korrekt und hochwertig** sind.
@@ -18,7 +18,7 @@ Mithilfe von **OpenAI (ChatGPT)** und einer **Retrieval Augmented Generation (RA
 
 ## ✅ Features
 
-- 🌐 **Automatisiertes Web Scraping** (inkl. Filter für relevante Inhalte)
+- 🌐 **Automatisiertes Web Crawling** (inkl. Filter für relevante Inhalte)
 - ✍️ **Generierung von SEO-optimierten Texten** mithilfe der OpenAI API
 - 🧠 **RAG-gestützte Fehlererkennung & Textkorrektur** mit Vektordatenbank (FAISS)
 - 📊 **Analyse der Optimierungsergebnisse** (Statistiken, Ähnlichkeiten, Visualisierungen)
@@ -44,7 +44,7 @@ SEO-Project/
 │   ├── final           # Dokumente für Kunden (HTML, PDF)
 │   └── images          # Visualisierungen
 ├── src/                # Source Code (Python-Klassen und Module)
-│   ├── webscraper.py    # Webscraping und Text-Extraktion
+│   ├── webscraper.py    # Webscrawling und Text-Extraktion
 │   ├── llmprocessor.py # Anbindung an OpenAI API, Keyword Extraktion
 │   ├── chatbot.py       # Zentrale Chatbot-Klasse zur Kommunikation mit GPT
 │   ├── seoanalyzer.py   # Analyse und Auswertung der Texte
@@ -57,7 +57,7 @@ SEO-Project/
 
 ## ⚙️ Ablauf & Module
 
-### 1. **Web Scraping**
+### 1. **Web Crawling**
 - **src/webscraper.py**: Holt Inhalte von Webseiten, filtert irrelevante Seiten (z.B. Impressum, AGB).
 
 ### 2. **SEO-Optimierung mit OpenAI**
@@ -81,7 +81,7 @@ SEO-Project/
 | Pandas, NumPy               | Datenanalyse und Verarbeitung                      |
 | Matplotlib, Seaborn         | Visualisierungen                                   |
 | Sentence Transformers       | Embedding-Erstellung für Vektordatenbank          |
-| BeautifulSoup, Requests     | Webscraping                                        |
+| BeautifulSoup, Requests     | Webcrawling                                        |
 | Google Colab                | Entwicklung und Ausführung                        |
 
 ## 🚀 Installation

@@ -45,7 +45,10 @@ class SEOAnalyzer:
         timestamp = datetime.now().strftime("%Y")
         filepath = os.path.join(self.output_dir, f"{filename}_{timestamp}.png")
         fig.savefig(filepath, dpi=300, bbox_inches="tight")
+        plt.close(fig)
         print(f"✅ Plot gespeichert: {filepath}")
+        return filepath
+
 
     def preprocess_text(self, text):
         text = text.lower()

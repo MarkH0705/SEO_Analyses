@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup, Comment
 class WebsiteScraper:
     """
     Diese Klasse kümmert sich um das Sammeln, Extrahieren und Filtern
-    von Texten aus einer Website. Zusätzlich ermöglicht sie eine SEO-Analyse.
+    von Texten aus einer Website.
     """
 
     def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50, excluded_keywords=None):
