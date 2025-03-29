@@ -28,10 +28,10 @@ class SEOReportExporter:
     def generate_html(self):
         html_template = """
         <!DOCTYPE html>
-        <html lang=\"de\">
+        <html lang="de">
         <head>
-            <meta charset=\"UTF-8\">
-            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Website Analyse</title>
             <style>
                 body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; color: #333; }
@@ -49,60 +49,115 @@ class SEOReportExporter:
         <body>
             <h1>SEO Analyse & Optimierungsreport</h1>
 
-            <div class=\"section\">
+            <!-- 1. Semantische Beziehungen -->
+            <div class="section">
                 <h2>1. Semantische Beziehungen in Vektor-Räumen</h2>
-                <p class=\"content\">{{ intro.embedding_text | safe }}</p>
-                <div class=\"img-block\">
-                    <img src=\"{{ images.embedding_demo }}\" alt=\"BERT Embedding Visualisierung\">
+                <p class="content">{{ intro.embedding_text | safe }}</p>
+                <div class="img-block">
+                    <img src="{{ images.embedding_demo }}" alt="BERT Embedding Visualisierung">
                 </div>
             </div>
 
-            <div class=\"section\">
+            <!-- 2. Keyword-Recherche -->
+            <div class="section">
                 <h2>2. Keyword-Recherche mit Google Ads</h2>
-                <p class=\"content\">{{ intro.keyword_text | safe }}</p>
-                <div class=\"img-block\">
-                    <img src=\"{{ images.google_ads_heatmap }}\" alt=\"Keyword Heatmap aus Google Ads\">
+                <p class="content">{{ intro.keyword_text | safe }}</p>
+                <div class="img-block">
+                    <img src="{{ images.google_ads_heatmap }}" alt="Keyword Heatmap aus Google Ads">
                 </div>
             </div>
 
-            <div class=\"section\">
+            <!-- 3. Cosine Similarity -->
+            <div class="section">
                 <h2>3. Cosine Similarity erklärt</h2>
-                <p class=\"content\">{{ intro.similarity_text | safe }}</p>
-                <div class=\"img-block\">
-                    <img src=\"{{ images.cosine_similarity_demo }}\" alt=\"Cosine Similarity Plot\">
+                <p class="content">{{ intro.similarity_text | safe }}</p>
+                <div class="img-block">
+                    <img src="{{ images.cosine_similarity_demo }}" alt="Cosine Similarity Plot">
                 </div>
             </div>
 
-            <div class=\"section\">
+            <!-- 4. Keyword-Abdeckung & Analyse -->
+            <div class="section">
                 <h2>4. Keyword-Abdeckung & Analyse</h2>
-                <p class=\"content\">{{ intro.keyword_analysis_text | safe }}</p>
-                <div class=\"img-block\">
-                    <img src=\"{{ images.wordclouds }}\" alt=\"Wordclouds\">
+                <p class="content">{{ intro.keyword_analysis_text | safe }}</p>
+                <div class="img-block">
+                    <img src="{{ images.wordclouds }}" alt="Wordclouds">
                 </div>
-                <div class=\"img-block\">
-                    <img src=\"{{ images.similarity_bars }}\" alt=\"Keyword Similarity Balken\">
+                <div class="img-block">
+                    <img src="{{ images.similarity_bars }}" alt="Keyword Similarity Balken">
                 </div>
             </div>
 
-            <div class=\"page-break\"></div>
+            <div class="page-break"></div>
 
+            <!-- NEUE SEKTIONEN -->
+
+            <!-- 5. 3D Keyword Similarity (matplotlib) -->
+            <div class="section">
+                <h2>5. 3D Keyword Similarity (matplotlib)</h2>
+                <p class="content">{{ intro.embedding_keyword_3d_text | safe }}</p>
+                <div class="img-block">
+                    <img src="{{ images.embedding_keyword_3d }}" alt="3D Keyword Similarity">
+                </div>
+            </div>
+
+            <!-- 6. Cosine Similarity Steps -->
+            <div class="section">
+                <h2>6. Cosine Similarity Steps</h2>
+                <p class="content">{{ intro.cosine_similarity_steps_text | safe }}</p>
+                <div class="img-block">
+                    <img src="{{ images.cosine_similarity_steps }}" alt="Cosine Steps">
+                </div>
+            </div>
+
+            <!-- 7. Cosine Comparison 3D -->
+            <div class="section">
+                <h2>7. Cosine Comparison 3D</h2>
+                <p class="content">{{ intro.cosine_comparison_3d_text | safe }}</p>
+                <div class="img-block">
+                    <img src="{{ images.cosine_comparison_3d }}" alt="Cosine Comparison 3D">
+                </div>
+            </div>
+
+            <!-- 8. BERT Embeddings 3D -->
+            <div class="section">
+                <h2>8. BERT Embeddings 3D</h2>
+                <p class="content">{{ intro.bert_embeddings_3d_text | safe }}</p>
+
+                <!-- Wir nutzen PNG – du KÖNNTEST hier svg genauso verlinken -->
+                {% if images.bert_embeddings_3d is mapping %}
+                <div class="img-block">
+                    <img src="{{ images.bert_embeddings_3d.png }}" alt="BERT Embeddings 3D">
+                </div>
+                {% else %}
+                <p style="color:red;">Keine BERT Embeddings gefunden!</p>
+                {% endif %}
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- 🔹 INDIVIDUELLE WEBSITE-SEKTIONEN -->
             {% for url, sections in seo_json.items() %}
-            <div class=\"section\">
-                <p class=\"url\">🌐 Website: {{ url }}</p>
-                <p class=\"header\">🔍 Analyse</p>
-                <p class=\"content\">{{ sections.Analyse | replace('\\n','<br>') | safe }}</p>
-                <p class=\"header\">🧠 Erklärung</p>
-                <p class=\"content\">{{ sections.Erklärung | replace('\\n','<br>') | safe }}</p>
-                <div class=\"column\">
-                    <p class=\"header\">🚀 SEO-Text</p>
-                    <p class=\"content\">{{ sections.SEO | replace('\\n','<br>') | safe }}</p>
+            <div class="section">
+                <p class="url">🌐 Website: {{ url }}</p>
+
+                <p class="header">🔍 Analyse</p>
+                <p class="content">{{ sections.Analyse | replace('\\n','<br>') | safe }}</p>
+
+                <p class="header">🧠 Erklärung</p>
+                <p class="content">{{ sections.Erklärung | replace('\\n','<br>') | safe }}</p>
+
+                <div class="column">
+                    <p class="header">🚀 SEO-Text</p>
+                    <p class="content">{{ sections.SEO | replace('\\n','<br>') | safe }}</p>
                 </div>
             </div>
-            <div class=\"page-break\"></div>
+            <div class="page-break"></div>
             {% endfor %}
         </body>
         </html>
         """
+
         template = Template(html_template)
         html_output = template.render(seo_json=self.seo_json, intro=self.sections_intro, images=self.image_paths)
 
@@ -110,6 +165,7 @@ class SEOReportExporter:
             f.write(html_output)
 
         print("✅ HTML exportiert:", self.html_path)
+
 
     async def export_pdf(self):
         async with async_playwright() as p:

@@ -23,7 +23,8 @@ class SEOAnalyzer:
         keywords_final,
         output_dir="output",
         historical_data=None,
-        wordcloud_exclude=None
+        wordcloud_exclude=None,
+        shared_image_dict={}
     ):
         """
         :param seo_json: JSON mit den optimierten Texten + alten Texten
@@ -49,7 +50,7 @@ class SEOAnalyzer:
         os.makedirs(self.output_dir, exist_ok=True)
 
         # Neu: Alle Bild-Pfade werden hier gesammelt
-        self.image_paths = {}
+        self.image_paths = shared_image_dict
 
     @staticmethod
     def load_historical_data(historical_data):
