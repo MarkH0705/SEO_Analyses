@@ -113,7 +113,8 @@ seo_analyzer.run_analysis()
 
 ## 🚧 Roadmap
 
+- [ ] **Produkt für Kunden finalisieren:** all-in-one solution für webcrawl + SEO + optimierten html code
 - [ ] Automatische SEO Scores (z.B. Google Ads API)
 - [ ] Automatische Keyword-Erweiterung
-- [ ] Mehrsprachigkeit (aktuell Deutsch)
+- [ ] Mehrsprachigkeit
 - [ ] WordPress-Integration
