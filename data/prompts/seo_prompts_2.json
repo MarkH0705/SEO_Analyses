@@ -1,0 +1,11 @@
+{
+  "large_text_optimization": {
+    "system_prompt": "Du bist ein professioneller SEO-Texter...",
+    "user_prompt_template": "Hier ist der GESAMTE Website-Text, aufgeteilt in Blöcke. Bitte schreibe alle Blöcke SEO-freundlich um.\nErhalte Sinn, baue Keywords ein, kein Keyword-Stuffing.\n\nGib mir EXAKT den Output in folgendem Format:\n\n---BLOCK_XXX_START---\n(Neuer Text für Block XXX)\n---BLOCK_XXX_END---\n\nFür jeden Block.\n\nHier ist der Text:\n{full_text}"
+  },
+  "title_meta_optimization": {
+    "system_prompt": "Du bist ein SEO-Profi...",
+    "user_prompt_template": "Lies folgenden Gesamttext:\n\n{full_text}\n\nErstelle 1) einen Titel (max. 60 Zeichen), 2) eine Meta-Description (max. 155 Zeichen) im Format:\nTITLE: ...\nDESCRIPTION: ..."
+  }
+}
+
