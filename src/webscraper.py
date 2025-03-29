@@ -84,7 +84,7 @@ class WebsiteScraper:
         title_tag = soup.find("title")
         if title_tag and title_tag.get_text(strip=True):
             meta_title = title_tag.get_text(strip=True)
-            texts.append(f"[META TITLE]: {meta_title}")
+            texts.append(f"[META TITLE]: {meta_title} " + "[TEXT]: ")
 
         # 2) Normale Texte (p, h1, h2, h3, li) – exklusive FAQ-Bereiche
         all_normal_tags = soup.find_all(["p", "h1", "h2", "h3", "li"])
