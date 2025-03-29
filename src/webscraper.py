@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup, Comment
 class WebsiteScraper:
     """
     Diese Klasse kümmert sich um das Sammeln, Extrahieren und Filtern
-    von Texten aus einer Website.
+    von Texten aus einer Website, inklusive des Meta-Titels.
     """
 
     def __init__(self, start_url="https://www.rue-zahnspange.de", max_pages=50, excluded_keywords=None):
@@ -51,7 +51,7 @@ class WebsiteScraper:
                 if response.status_code == 200 and "text/html" in response.headers.get("Content-Type", ""):
                     soup = BeautifulSoup(text_data, "html.parser")
 
-                    # Text extrahieren
+                    # Text extrahieren (inkl. <title>)
                     text = self._extract_text_from_soup(soup)
                     self.scraped_data[url] = text
 
@@ -67,25 +67,37 @@ class WebsiteScraper:
 
     def _extract_text_from_soup(self, soup):
         """
-        Extrahiert aus <p>, <h1>, <h2>, <h3>, <li> reinen Text,
-        aber NICHT die, die in .faq4_question oder .faq4_answer stecken.
-        Außerdem extrahiert er separat die FAQ-Fragen und -Antworten.
+        Extrahiert den <title>-Inhalt und alle <p>, <h1>, <h2>, <h3>, <li>.
+        Schließt FAQ-Bereiche (faq4_question, faq4_answer) mit ein.
         """
+        # Zuerst CSS/JS/Noscript entfernen
         for script_or_style in soup(["script", "style", "noscript"]):
             script_or_style.decompose()
 
+        # Kommentare entfernen
         for comment in soup.find_all(string=lambda text: isinstance(text, Comment)):
             comment.extract()
 
         texts = []
+
+        # 1) Meta-Titel hinzufügen (falls vorhanden)
+        title_tag = soup.find("title")
+        if title_tag and title_tag.get_text(strip=True):
+            meta_title = title_tag.get_text(strip=True)
+            texts.append(f"[META TITLE]: {meta_title}")
+
+        # 2) Normale Texte (p, h1, h2, h3, li) – exklusive FAQ-Bereiche
         all_normal_tags = soup.find_all(["p", "h1", "h2", "h3", "li"])
         for tag in all_normal_tags:
+            # FAQ-Bereiche überspringen
             if tag.find_parent(class_="faq4_question") or tag.find_parent(class_="faq4_answer"):
                 continue
+
             txt = tag.get_text(separator="\n", strip=False)
             if txt.strip():
                 texts.append(txt.strip("\r\n"))
 
+        # 3) FAQ-Bereiche (Fragen + Antworten)
         questions = soup.select(".faq4_question")
         answers = soup.select(".faq4_answer")
         for q, a in zip(questions, answers):
@@ -94,6 +106,7 @@ class WebsiteScraper:
             if q_text and a_text:
                 texts.append(f"Frage: {q_text}\nAntwort: {a_text}")
 
+        # 4) Zusammenführen
         return "\n\n".join(texts)
 
     def get_scraped_data(self):
@@ -103,9 +116,12 @@ class WebsiteScraper:
         return self.scraped_data
 
     def get_filtered_texts(self):
+        """
+        Ruft scrape_website() auf und filtert URLs anhand der excluded_keywords.
+        """
         self.scrape_website()
         self.filtered_texts = {
             url: text for url, text in self.scraped_data.items()
             if not any(keyword in url.lower() for keyword in self.excluded_keywords)
             }
-        return self.filtered_texts  # Liste der gefilterten Texte zurückgeben
+        return self.filtered_texts  # Gibt nur gefilterte Seiten zurück

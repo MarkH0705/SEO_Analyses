@@ -34,7 +34,7 @@ class SEOReportExporter:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Website Analyse</title>
             <style>
-                body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; color: #333; }
+                body { font-family: Arial, "Noto Color Emoji", "Apple Color Emoji", sans-serif; margin: 30px; line-height: 1.6; color: #333; }
                 h1, h2 { text-align: center; color: #2c3e50; }
                 .section { margin-bottom: 30px; }
                 .img-block { text-align: center; margin: 20px 0; }
@@ -54,7 +54,8 @@ class SEOReportExporter:
                 <h2>1. Semantische Beziehungen in Vektor-Räumen</h2>
                 <p class="content">{{ intro.embedding_text | safe }}</p>
                 <div class="img-block">
-                    <img src="{{ images.embedding_demo }}" alt="BERT Embedding Visualisierung">
+                    <!-- ANPASSUNG: statt images.embedding_demo => images.embedding_keyword_3d -->
+                    <img src="{{ images.embedding_keyword_3d }}" alt="BERT Embedding Visualisierung">
                 </div>
             </div>
 
@@ -63,7 +64,8 @@ class SEOReportExporter:
                 <h2>2. Keyword-Recherche mit Google Ads</h2>
                 <p class="content">{{ intro.keyword_text | safe }}</p>
                 <div class="img-block">
-                    <img src="{{ images.google_ads_heatmap }}" alt="Keyword Heatmap aus Google Ads">
+                    <!-- ANPASSUNG: statt images.google_ads_heatmap => images.keyword_heatmap -->
+                    <img src="{{ images.keyword_heatmap }}" alt="Keyword Heatmap aus Google Ads">
                 </div>
             </div>
 
@@ -72,7 +74,8 @@ class SEOReportExporter:
                 <h2>3. Cosine Similarity erklärt</h2>
                 <p class="content">{{ intro.similarity_text | safe }}</p>
                 <div class="img-block">
-                    <img src="{{ images.cosine_similarity_demo }}" alt="Cosine Similarity Plot">
+                    <!-- ANPASSUNG: statt images.cosine_similarity_demo => images.cosine_similarity_steps -->
+                    <img src="{{ images.cosine_similarity_steps }}" alt="Cosine Similarity Steps">
                 </div>
             </div>
 
@@ -81,10 +84,12 @@ class SEOReportExporter:
                 <h2>4. Keyword-Abdeckung & Analyse</h2>
                 <p class="content">{{ intro.keyword_analysis_text | safe }}</p>
                 <div class="img-block">
-                    <img src="{{ images.wordclouds }}" alt="Wordclouds">
+                    <!-- ANPASSUNG: statt images.wordclouds => images.wordcloud_filtered -->
+                    <img src="{{ images.wordcloud_filtered }}" alt="Wordcloud (gefiltert)">
                 </div>
                 <div class="img-block">
-                    <img src="{{ images.similarity_bars }}" alt="Keyword Similarity Balken">
+                    <!-- ANPASSUNG: statt images.similarity_bars => images.similarity_scores -->
+                    <img src="{{ images.similarity_scores }}" alt="Keyword Similarity Balken">
                 </div>
             </div>
 
@@ -97,6 +102,7 @@ class SEOReportExporter:
                 <h2>5. 3D Keyword Similarity (matplotlib)</h2>
                 <p class="content">{{ intro.embedding_keyword_3d_text | safe }}</p>
                 <div class="img-block">
+                    <!-- SELBER KEY: images.embedding_keyword_3d -->
                     <img src="{{ images.embedding_keyword_3d }}" alt="3D Keyword Similarity">
                 </div>
             </div>
@@ -106,7 +112,8 @@ class SEOReportExporter:
                 <h2>6. Cosine Similarity Steps</h2>
                 <p class="content">{{ intro.cosine_similarity_steps_text | safe }}</p>
                 <div class="img-block">
-                    <img src="{{ images.cosine_similarity_steps }}" alt="Cosine Steps">
+                    <!-- SELBER KEY: images.cosine_similarity_steps -->
+                    <img src="{{ images.cosine_similarity_steps }}" alt="Cosine Similarity Steps">
                 </div>
             </div>
 
@@ -115,6 +122,7 @@ class SEOReportExporter:
                 <h2>7. Cosine Comparison 3D</h2>
                 <p class="content">{{ intro.cosine_comparison_3d_text | safe }}</p>
                 <div class="img-block">
+                    <!-- SELBER KEY: images.cosine_comparison_3d -->
                     <img src="{{ images.cosine_comparison_3d }}" alt="Cosine Comparison 3D">
                 </div>
             </div>
@@ -124,7 +132,7 @@ class SEOReportExporter:
                 <h2>8. BERT Embeddings 3D</h2>
                 <p class="content">{{ intro.bert_embeddings_3d_text | safe }}</p>
 
-                <!-- Wir nutzen PNG – du KÖNNTEST hier svg genauso verlinken -->
+                <!-- BERT hat PNG + SVG => wir binden PNG ein -->
                 {% if images.bert_embeddings_3d is mapping %}
                 <div class="img-block">
                     <img src="{{ images.bert_embeddings_3d.png }}" alt="BERT Embeddings 3D">
@@ -136,19 +144,19 @@ class SEOReportExporter:
 
             <div class="page-break"></div>
 
-            <!-- 🔹 INDIVIDUELLE WEBSITE-SEKTIONEN -->
+            <!-- INDIVIDUELLE WEBSITE-SEKTIONEN -->
             {% for url, sections in seo_json.items() %}
             <div class="section">
-                <p class="url">🌐 Website: {{ url }}</p>
+                <p class="url">Website: {{ url }}</p>
 
-                <p class="header">🔍 Analyse</p>
+                <p class="header">Analyse</p>
                 <p class="content">{{ sections.Analyse | replace('\\n','<br>') | safe }}</p>
 
-                <p class="header">🧠 Erklärung</p>
+                <p class="header">Erklärung</p>
                 <p class="content">{{ sections.Erklärung | replace('\\n','<br>') | safe }}</p>
 
                 <div class="column">
-                    <p class="header">🚀 SEO-Text</p>
+                    <p class="header">SEO-Text</p>
                     <p class="content">{{ sections.SEO | replace('\\n','<br>') | safe }}</p>
                 </div>
             </div>
@@ -159,13 +167,16 @@ class SEOReportExporter:
         """
 
         template = Template(html_template)
-        html_output = template.render(seo_json=self.seo_json, intro=self.sections_intro, images=self.image_paths)
+        html_output = template.render(
+            seo_json=self.seo_json,
+            intro=self.sections_intro,
+            images=self.image_paths
+        )
 
         with open(self.html_path, "w", encoding="utf-8") as f:
             f.write(html_output)
 
         print("✅ HTML exportiert:", self.html_path)
-
 
     async def export_pdf(self):
         async with async_playwright() as p:
@@ -182,13 +193,16 @@ class SEOReportExporter:
         print("✅ PDF mit Playwright erstellt:", self.pdf_path)
 
     def export_docx(self):
+        # Angenommen, deine Bilder liegen in 'output/images' relativ zu HTML in 'output/final/preview.html'
+        resource_path = os.path.join(self.output_path, "images")
         pypandoc.convert_file(
             source_file=self.html_path,
             to="docx",
             outputfile=self.docx_path,
-            extra_args=["--standalone"]
+            extra_args=["--standalone", f"--resource-path={resource_path}"]
         )
         print("✅ Konvertierung nach DOCX abgeschlossen:", self.docx_path)
+
 
     def run_all_exports(self):
         self.generate_html()
