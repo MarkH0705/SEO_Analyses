@@ -37,9 +37,10 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 
 ---
 
-## 3. **SEO-Optimierungs-Pipeline (LangChain)**
+## 3. **SEO-Optimierungs-Pipeline**
 - [ ] **Prompts in JSON-Dateien** verlagern (z.B. `/data/prompts/`) und sauber verlinken
 - [ ] **Supervisor-Feedback** integrieren & QA-Schritte definieren
+- [ ] Langchain und SEOPageOptimizer verbinden
 
 ---
 
