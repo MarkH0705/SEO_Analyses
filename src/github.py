@@ -48,7 +48,7 @@ class GitHubManager:
 
         # ordner und dateitypen festlegen, die nach github gepusht werden sollen
         print("➕ Änderungen hinzufügen...")
-        self.run_command("git add notebooks/*.ipynb src/*.py output/*.html output/*.pdf data/keywords/*.xlsx data/prompts/*.json data/faiss_db README.md TODO.md tests")
+        self.run_command("git add notebooks src output data/keywords data/prompts data/intro_texts data/faiss_db README.md TODO.md tests")
 
         print("📌 Änderungen committen...")
         commit_message = "🚀 Automatische Aktualisierung des SEO-Projekts"

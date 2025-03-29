@@ -1,0 +1,11 @@
+ {
+  "embedding_text": "In Vektor-Räumen können Wörter wie 'König' und 'Königin' durch ähnliche Abstände dargestellt werden. Ein typisches Beispiel: König - Mann + Frau ≈ Königin.",
+  "keyword_text": "Die Auswahl der Keywords basiert auf einer Heatmap aus Google Ads – sortiert nach Relevanz und Suchvolumen.",
+  "similarity_text": "Cosine Similarity misst den Winkel zwischen zwei Vektoren. Je näher der Winkel bei 0°, desto ähnlicher sind die Inhalte.",
+  "keyword_analysis_text": "Die finale Analyse zeigt die Häufigkeit & semantische Nähe der Keywords im SEO-Text.",
+
+  "embedding_keyword_3d_text": "Diese Darstellung zeigt die räumliche Nähe zwischen Old Text, Optimized Text und zufälligen Keywords in 3D.",
+  "cosine_comparison_3d_text": "Diese Grafik vergleicht SEO-Keywords, Old Text und Optimized Text im 3D-Vektorraum.",
+  "cosine_similarity_steps_text": "In drei Schritten: 1) Vektoren, 2) Dot Product, 3) Cosine Similarity – so wird semantische Ähnlichkeit messbar.",
+  "bert_embeddings_3d_text": "Hier haben wir BERT-Embeddings für verschiedene Wörter berechnet und in 3D projiziert, um semantische Beziehungen zu veranschaulichen."
+}
