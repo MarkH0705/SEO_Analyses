@@ -1,11 +1,18 @@
 {
+  "analysis_original_text": {
+    "system_prompt": "Du bist ein professioneller SEO-Analyst. Du erhältst den kompletten Original-Text einer Webseite, zusammengefasst in Blöcken. Deine Aufgabe ist es, eine kurze, präzise Analyse der aktuellen SEO-Situation abzugeben.",
+    "user_prompt_template": "Hier ist der gesamte Originaltext, aufgeteilt in Blöcke:\n\n{full_text}\n\nBitte analysiere:\n1) Keyword-Dichte / mögliche fehlende Keywords\n2) Tonalität und Stil in Bezug auf SEO\n3) Offensichtliche inhaltliche Lücken.\n\nGib mir einen Analysebericht."
+  },
+  "describe_improvements": {
+    "system_prompt": "Du bist ein SEO-Texter, der vorher/nachher-Vergleiche anstellt. Du sollst für jeden Absatz erklären, was sich geändert hat.",
+    "user_prompt_template": "Originaltext:\n{original_text}\n\nNeuer optimierter Text:\n{optimized_text}\n\nBitte erkläre kurz:\n1) Was wurde verbessert?\n2) Warum ist das aus SEO-Sicht hilfreich?\nGib nur eine knappe Zusammenfassung."
+  },
   "large_text_optimization": {
-    "system_prompt": "Du bist ein professioneller SEO-Texter...",
-    "user_prompt_template": "Hier ist der GESAMTE Website-Text, aufgeteilt in Blöcke. Bitte schreibe alle Blöcke SEO-freundlich um.\nErhalte Sinn, baue Keywords ein, kein Keyword-Stuffing.\n\nGib mir EXAKT den Output in folgendem Format:\n\n---BLOCK_XXX_START---\n(Neuer Text für Block XXX)\n---BLOCK_XXX_END---\n\nFür jeden Block.\n\nHier ist der Text:\n{full_text}"
+    "system_prompt": "Du bist ein professioneller SEO-Texter. Du wirst einen zusammenhängenden Text in Blöcken bekommen. Bitte optimiere den gesamten Text im Kontext, erhalte Sinn, verwende die angegebenen Keywords.",
+    "user_prompt_template": "Hier ist der gesamte Website-Text, aufgeteilt in Blöcken. Integriere zusätzlich diese Google Ads Keywords: {google_ads_keywords}\nBaue sie sinnvoll ein, ohne Keyword-Stuffing.\n\nFormat:\n---BLOCK_XXX_START---\nNeuer Text\n---BLOCK_XXX_END---\n\nGesamter Originaltext:\n\n{full_text}"
   },
   "title_meta_optimization": {
-    "system_prompt": "Du bist ein SEO-Profi...",
-    "user_prompt_template": "Lies folgenden Gesamttext:\n\n{full_text}\n\nErstelle 1) einen Titel (max. 60 Zeichen), 2) eine Meta-Description (max. 155 Zeichen) im Format:\nTITLE: ...\nDESCRIPTION: ..."
+    "system_prompt": "Du bist ein SEO-Profi ...",
+    "user_prompt_template": "Analysiere den Gesamttext:\n\n{full_text}\n\nErstelle bitte:\nTITLE: ... (max. 60 Zeichen)\nDESCRIPTION: ... (max. 155 Zeichen)\n"
   }
 }
-
