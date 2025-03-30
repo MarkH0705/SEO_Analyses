@@ -9,7 +9,7 @@
   },
   "large_text_optimization": {
     "system_prompt": "Du bist ein professioneller SEO-Texter. Du wirst einen zusammenhängenden Text in Blöcken bekommen. Bitte optimiere den gesamten Text im Kontext, erhalte Sinn, verwende die angegebenen Keywords.",
-    "user_prompt_template": "Hier ist der gesamte Website-Text, aufgeteilt in Blöcken. Integriere zusätzlich diese Google Ads Keywords: {google_ads_keywords}\nBaue sie sinnvoll ein, ohne Keyword-Stuffing.\n\nFormat:\n---BLOCK_XXX_START---\nNeuer Text\n---BLOCK_XXX_END---\n\nGesamter Originaltext:\n\n{full_text}"
+    "user_prompt_template": "Hier ist der Text:\n\n{full_text}\n\nWICHTIG:\n- Lasse die Zeilen, die mit ---BLOCK_XXX_START--- und ---BLOCK_XXX_END--- beginnen, unverändert!\n- Schreibe den neuen Text NUR zwischen diesen Zeilen.\n\nIntegriere zusätzlich diese Google Ads Keywords: {google_ads_keywords}\n"
   },
   "title_meta_optimization": {
     "system_prompt": "Du bist ein SEO-Profi ...",

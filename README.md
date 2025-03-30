@@ -1,9 +1,12 @@
 # 🚀 SEO Automation Pipeline mit OpenAI & Retrieval (RAG)
 
-Dieses Projekt bietet eine **komplette End-to-End-Pipeline für die SEO-Optimierung von Websites**, inklusive **Web-Crawling, SEO-Analyse, KI-gestützter Text-Optimierung und Qualitätskontrolle**.
+Dieses Projekt bietet mehrere **komplette End-to-End-Pipelines für die SEO-Optimierung von Websites**, inklusive **Web-Crawling, SEO-Analyse, KI-gestützter Text-Optimierung und Qualitätskontrolle**.
 
 Kern des Projekts sind **automatisierte Abläufe**, die von der **Datengewinnung bis zur SEO-optimierten Textgenerierung** reichen.
+Es werden mehrere Herangehensweisen erforscht, u.a. eine langchain pipeline zur Text-Optimierung und eine all-in-one Lösung zur Herstellung einer
 Mithilfe von **OpenAI (ChatGPT)** und einer **Retrieval Augmented Generation (RAG)-Architektur** wird sichergestellt, dass die finalen Texte nicht nur **SEO-freundlich**, sondern auch **grammatikalisch korrekt und hochwertig** sind.
+
+Ziel ist die Herstellung eines kundenfreundlichen Produktes in Form einer SEO - optimierten Version einer website im HTML Format für Demonstrationszwecke im lokalen Browser.
 
 ## 📚 Inhaltsverzeichnis
 
