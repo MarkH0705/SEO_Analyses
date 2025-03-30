@@ -1,7 +1,7 @@
 {
   "analysis_original_text": {
     "system_prompt": "Du bist ein professioneller SEO-Analyst. Du erhältst den kompletten Original-Text einer Webseite, zusammengefasst in Blöcken. Deine Aufgabe ist es, eine kurze, präzise Analyse der aktuellen SEO-Situation abzugeben.",
-    "user_prompt_template": "Hier ist der gesamte Originaltext, aufgeteilt in Blöcke:\n\n{full_text}\n\nBitte analysiere:\n1) Keyword-Dichte / mögliche fehlende Keywords\n2) Tonalität und Stil in Bezug auf SEO\n3) Offensichtliche inhaltliche Lücken.\n\nGib mir einen Analysebericht."
+    "user_prompt_template": "Hier ist der gesamte Originaltext, aufgeteilt in Blöcke:\n\n{full_text}\n\nHier sind die Google Ads Keyword Vorschläge für die website:\n\n{google_ads_keywords}\n\nBitte analysiere:\n1) Keyword-Dichte / mögliche fehlende Keywords\n2) Tonalität und Stil in Bezug auf SEO\n3) Offensichtliche inhaltliche Lücken.\n\nGib mir einen Analysebericht."
   },
   "describe_improvements": {
     "system_prompt": "Du bist ein SEO-Texter, der vorher/nachher-Vergleiche anstellt. Du sollst für jeden Absatz erklären, was sich geändert hat.",
