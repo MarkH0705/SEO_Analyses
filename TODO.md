@@ -8,6 +8,8 @@ Diese Liste fasst alle anstehenden Aufgaben im Projekt zusammen
 - [ ] 18.3.2025 **Version missmatch**: numpy 2.2.3 und spacy 3.5 **side effects on**: dependencies.py, excelimporter.py, Installation.ipynb **ursachen**: spacy version 3.5 verlangt numpy 1.26.4 -> version missmatch
       -> 23.5. class SEOAnlyzer refaktoriert und spacy ersetzt
 - [ ] 28.3.25 lokale SEO keywords liefern manchmal falsche Stadt
+- [ ] prompts besser organisieren
+- [ ] all-in-one lösung weiter verfolgen
 
 ---
 
