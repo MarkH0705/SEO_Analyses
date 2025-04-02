@@ -21,7 +21,7 @@ class SEOAnalyzer:
         self,
         seo_json,
         keywords_final,
-        output_dir="output",
+        output_dir="",
         historical_data=None,
         wordcloud_exclude=None,
         shared_image_dict={}
@@ -35,8 +35,8 @@ class SEOAnalyzer:
         """
         self.seo_json = seo_json
         self.keywords_final = keywords_final
-        self.original_texts_list_clean = [seo_json[key]['alt'] for key in seo_json]
-        self.optimized_texts_list_clean = [seo_json[key]['SEO'] for key in seo_json]
+        self.original_texts_list_clean = [seo_json[key]['original_text'] for key in seo_json]
+        self.optimized_texts_list_clean = [seo_json[key]['optimized_text'] for key in seo_json]
 
         # Falls None, nimm leere Liste
         self.wordcloud_exclude = wordcloud_exclude if wordcloud_exclude else []
