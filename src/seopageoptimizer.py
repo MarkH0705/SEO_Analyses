@@ -28,7 +28,7 @@ class SEOPageOptimizer:
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
         self.prompts = self.load_prompts(prompts_file)
-        self.google_ads_keywords = keywords_final
+        self.google_ads_keywords = google_ads_keywords
 
     def load_prompts(self, prompts_file):
         logging.info(f"Lade Prompts aus Datei: {prompts_file}")
@@ -159,7 +159,7 @@ class SEOPageOptimizer:
     # ================== 1) Globale Analyse ==================
     def do_pre_analysis(self, text_blocks):
         full_text = self.build_big_string(text_blocks)
-        analysis = self.generate_llm_text("analysis_original_text", full_text=full_text, google_ads_keywords=google_ads_keywords)
+        analysis = self.generate_llm_text("analysis_original_text", full_text=full_text, google_ads_keywords=self.google_ads_keywords)
         return analysis
 
     # ================== 2) SEO-Optimierung ==================
