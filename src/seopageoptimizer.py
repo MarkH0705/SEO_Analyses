@@ -291,3 +291,23 @@ class SEOPageOptimizer:
             json.dump(combined_data, f, indent=2, ensure_ascii=False)
 
         logging.info(f"Fertig! => {outfile}\nReport => {json_report}")
+
+for url in list(original_texts.keys()):
+    optimizer = SEOPageOptimizer(
+        output_dir=OUTPUT_PATH + "/final",
+        prompts_file=PROMPT_PATH + "/seo_prompts_2.json",
+        google_ads_keywords=keywords_llm_google
+    )
+
+    url_to_optimize = url
+    # Erzeuge sinnvollen Dateinamen, z.B. "page_optimized_English.html"
+    sanitized_url = str(url).replace("/", "")
+    html_filename = f"{sanitized_url}_optimized.html"
+    outfile = os.path.join(OUTPUT_PATH, "final", html_filename)
+
+    optimizer.optimize_page(
+        url=url_to_optimize,
+        outfile=outfile
+    )
+
+    print(f"Done! HTML for {url_to_optimize} at:", outfile)
