@@ -13,23 +13,21 @@ from chatbot import Chatbot
 logging.basicConfig(level=logging.INFO)
 
 class SEOPageOptimizer:
-    """
-    Diese Klasse extrahiert die Texte in Blöcken, lässt ChatGPT:
-     - globale Analyse (analysis_original_text)
-     - blockweise rewriting (large_text_optimization)
-     - globale Beschreibung der Änderungen (describe_improvements)
-    und baut eine final HTML + JSON-Report.
-    """
-
     def __init__(self,
                  output_dir="",
                  prompts_file="",
-                 google_ads_keywords=""
-    ):
+                 google_ads_keywords="",
+                 target_language=None):
+        """
+        target_language: z.B. "English" oder "French" (optional).
+        """
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
         self.prompts = self.load_prompts(prompts_file)
         self.google_ads_keywords = google_ads_keywords
+
+        # => Falls wir optional eine Übersetzung machen wollen
+        self.target_language = target_language
 
     def load_prompts(self, prompts_file):
         logging.info(f"Lade Prompts aus Datei: {prompts_file}")
@@ -114,28 +112,24 @@ class SEOPageOptimizer:
         logging.info(f"Blocks gesamt: {len(text_blocks)}")
         return text_blocks, title_text, meta_desc_text, soup
 
-    def build_big_string(self, text_blocks):
+    def build_big_string(self, text_blocks, use_optimized=False):
         """
-        Baut 1 großen String => Original-Blöcke
+        Baut 1 großen String => wahlweise Original- oder Optimized-Blöcke
+        Markierungen:
+          ---BLOCK_XXX_START---
+          TEXT
+          ---BLOCK_XXX_END---
         """
         lines = []
         for b in text_blocks:
             lines.append(f"---{b['id']}_START---")
-            lines.append(b["original_text"])
+            if use_optimized and b.get("optimized_text"):
+                lines.append(b["optimized_text"])
+            else:
+                lines.append(b["original_text"])
             lines.append(f"---{b['id']}_END---")
         return "\n".join(lines)
 
-    def build_big_string_optimized(self, text_blocks):
-        """
-        Dasselbe, aber mit optimized_text
-        """
-        lines = []
-        for b in text_blocks:
-            text = b["optimized_text"] or "(keine Optimierung)"
-            lines.append(f"---{b['id']}_START---")
-            lines.append(text)
-            lines.append(f"---{b['id']}_END---")
-        return "\n".join(lines)
 
     def generate_llm_text(self, agent_key, **kwargs):
         if agent_key not in self.prompts:
@@ -157,59 +151,85 @@ class SEOPageOptimizer:
         found = pattern.findall(llm_text)
         return found
 
-    # ================== 1) Globale Analyse ==================
+    # 1) Analyse
     def do_pre_analysis(self, text_blocks):
-        full_text = self.build_big_string(text_blocks)
-        analysis = self.generate_llm_text("analysis_original_text", full_text=full_text, google_ads_keywords=self.google_ads_keywords)
+        full_text = self.build_big_string(text_blocks, use_optimized=False)
+        analysis = self.generate_llm_text("analysis_original_text",
+                                          full_text=full_text,
+                                          google_ads_keywords=self.google_ads_keywords)
         return analysis
 
-    # ================== 2) SEO-Optimierung ==================
+    # 2) SEO-Optimierung
     def do_large_text_optimization(self, text_blocks):
-        full_text = self.build_big_string(text_blocks)
-        llm_out = self.generate_llm_text(
-            "large_text_optimization",
-            full_text=full_text,
-            google_ads_keywords=self.google_ads_keywords
-        )
+        full_text = self.build_big_string(text_blocks, use_optimized=False)
+        llm_out = self.generate_llm_text("large_text_optimization",
+                                         full_text=full_text,
+                                         google_ads_keywords=self.google_ads_keywords)
         results = self.parse_llm_response(llm_out)
         block_map = { b["id"]: b for b in text_blocks }
         for b_id, new_txt in results:
             block_map[b_id]["optimized_text"] = new_txt.strip()
         return text_blocks
 
-    # ================== 3) Globale Beschreibung =============
-    def describe_improvements_global(self, text_blocks):
+    # 2b) Optionale Übersetzung
+    def do_translation(self, text_blocks, language="English"):
         """
-        Original => build_big_string
-        Neu => build_big_string_optimized
-        => 'describe_improvements' => 1 Gesamter Bericht
+        Nimmt die bereits SEO-optimierten Blocks -> generiert 1 big string
+        -> Schickt an ChatGPT (translate_text) => parse => block_map["translated_text"]
         """
-        original_str = self.build_big_string(text_blocks)
-        optimized_str = self.build_big_string_optimized(text_blocks)
+        logging.info(f"Starte Übersetzung ins {language} ...")
 
-        desc = self.generate_llm_text(
-            "describe_improvements",
-            original_text=original_str,
-            optimized_text=optimized_str
+        # 1) Baue string aus "optimized_text"
+        optimized_full_text = self.build_big_string(text_blocks, use_optimized=True)
+
+        # 2) Rufe prompt => 'translate_text'
+        translation_output = self.generate_llm_text("translate_text",
+            optimized_full_text=optimized_full_text,
+            language=language  # falls wir es im user_prompt_template brauchen
         )
+
+        # 3) parse => blockweise => store => e.g. block['translated_text']
+        results = self.parse_llm_response(translation_output)
+        block_map = { b["id"]: b for b in text_blocks }
+        for b_id, new_txt in results:
+            block_map[b_id]["translated_text"] = new_txt.strip()
+
+        return text_blocks
+
+    # 3) Globale Beschreibung
+    def describe_improvements_global(self, text_blocks):
+        original_str = self.build_big_string(text_blocks, use_optimized=False)
+        optimized_str = self.build_big_string(text_blocks, use_optimized=True)
+
+        desc = self.generate_llm_text("describe_improvements",
+                                      original_text=original_str,
+                                      optimized_text=optimized_str)
         return desc
 
-    # ================== 4) Re-Inject in HTML ================
-    def inject_content(self, soup, text_blocks, new_title=None, new_desc=None):
+    # 4) Re-Inject
+    def inject_content(self, soup, text_blocks, new_title=None, new_desc=None, use_translated=False):
+        """
+        use_translated=True => Falls wir am Ende die 'translated_text' statt 'optimized_text' injizieren wollen.
+        """
         for b in text_blocks:
-            opt_txt = b["optimized_text"]
-            if not opt_txt:
+            if use_translated and b.get("translated_text"):
+                final_txt = b["translated_text"]
+            else:
+                final_txt = b["optimized_text"]
+
+            if not final_txt:
                 continue
-            opt_txt_html = opt_txt.replace('\n', '<br/>')
+
+            # optional: convert linebreaks
+            final_txt_html = final_txt.replace('\n', '<br/>')
             elem = b["elem"]
             if b["source"] == "body":
                 elem.clear()
-                elem.append(opt_txt)
+                elem.append(final_txt)
             elif b["source"] == "attribute":
                 attr_name = b["attr_name"]
-                elem[attr_name] = opt_txt
+                elem[attr_name] = final_txt
 
-        # Falls Title / Desc
         if new_title:
             title_tag = soup.find("title")
             if not title_tag:
@@ -243,8 +263,10 @@ class SEOPageOptimizer:
             f.write(str(soup))
         logging.info(f"✅ Datei gespeichert: {filepath}")
 
-    # ================== 5) Hauptworkflow ====================
-    def optimize_page(self, url: str, outfile: str):
+    def optimize_page(self, url: str, outfile: str, translate=False, language="English"):
+        """
+        Hauptworkflow, plus optionaler Übersetzung ins 'language'.
+        """
         logging.info(f"SEO-Optimierung startet => {url} => {outfile}")
 
         # 1) HTML + extrahieren
@@ -260,32 +282,41 @@ class SEOPageOptimizer:
         # 4) Globale Beschreibung
         improvement_desc = self.describe_improvements_global(blocks)
 
-        # 5) Title & Desc => optional
+        # 5) (optional) Übersetzen
+        if translate:
+            blocks = self.do_translation(blocks, language=language)
+
+        # 6) Title & Desc => optional
         new_title = old_title
         new_desc  = old_desc
 
-        # 6) Re-Inject
-        new_soup = self.inject_content(soup, blocks, new_title, new_desc)
+        # 7) Re-Inject
+        # Falls wir 'translate=True', injizieren wir z.B. 'translated_text'
+        use_translated = True if translate else False
+        new_soup = self.inject_content(soup, blocks, new_title, new_desc, use_translated=use_translated)
+
+        # 8) Speichern
         self.save_html(new_soup, outfile)
 
-        # 7) combined report
+        # 9) combined report
         combined_data = {
             "analysis_of_original_text": analysis_text,
             "improvement_description": improvement_desc,
             "blocks": []
         }
         for b in blocks:
-            combined_data["blocks"].append({
+            cblock = {
                 "id": b["id"],
                 "original_text": b["original_text"],
                 "optimized_text": b["optimized_text"]
-            })
+            }
+            if translate and b.get("translated_text"):
+                cblock["translated_text"] = b["translated_text"]
+            combined_data["blocks"].append(cblock)
 
-        # Hier: Aus url einen kurzen Dateinamen bauen:
-        # z.B. alle Slashes entfernen, oder du kannst parse_url
+        # filename => "report_{url_sanitized}.json"
         sanitized_url = url.replace("/", "")
         report_filename = f"report_{sanitized_url}.json"
-
         json_report = os.path.join(self.output_dir, report_filename)
         with open(json_report, "w", encoding="utf-8") as f:
             json.dump(combined_data, f, indent=2, ensure_ascii=False)
