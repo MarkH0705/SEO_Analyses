@@ -31,9 +31,6 @@ Der Kunde erhält eine Datei als Vorschau auf seine SEO optimierte website.
 
 
 
-<img src="https://drive.google.com/uc?id=10oR2bcugvN2MClp14ia7gnzMGX5b896t" alt="SEO Heatmap" width="600">
-
-
 
 
 ## 🗂️ Projektstruktur
