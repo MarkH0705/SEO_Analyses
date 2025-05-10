@@ -1,4 +1,4 @@
-%%writefile '/content/drive/MyDrive/Colab Notebooks/SEO/README.md'
+
 # 🚀 SEO Automation Pipeline mit OpenAI & Retrieval (RAG)
 
 Dieses Projekt bietet eine **komplette End-to-End-Pipelines für die SEO-Optimierung von Websites**, inklusive **Web-Crawling, SEO-Analyse, KI-gestützter Text-Optimierung und Qualitätskontrolle**.
