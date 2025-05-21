@@ -1,4 +1,3 @@
-
 # 🚀 SEO Automation Pipeline mit OpenAI & Retrieval (RAG)
 
 Dieses Projekt bietet eine **komplette End-to-End-Pipelines für die SEO-Optimierung von Websites**, inklusive **Web-Crawling, SEO-Analyse, KI-gestützter Text-Optimierung und Qualitätskontrolle**.
@@ -29,6 +28,9 @@ Der Kunde erhält eine Datei als Vorschau auf seine SEO optimierte website.
 - 📊 Umfangreiche **Datenvisualisierungen** (Wordclouds, Cosine Similarity, Keyword-Verteilung)
 
 
+
+
+<img src="https://drive.google.com/uc?id=10oR2bcugvN2MClp14ia7gnzMGX5b896t" alt="SEO Heatmap" width="600">
 
 
 
