@@ -39,3 +39,4 @@ from transformers import BertTokenizer, BertModel
 from sklearn.decomposition import PCA
 
 import pytest
+import kaleido
