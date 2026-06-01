@@ -8,6 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from transformers import BertTokenizer, BertModel
 import plotly.graph_objects as go
 from datetime import datetime
+import kaleido
 
 class EmbeddingDemo:
     def __init__(self, output_dir="output", final_images=None):
