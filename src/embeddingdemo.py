@@ -9,6 +9,7 @@ from transformers import BertTokenizer, BertModel
 import plotly.graph_objects as go
 from datetime import datetime
 import kaleido
+kaleido.get_chrome_sync()
 
 class EmbeddingDemo:
     def __init__(self, output_dir="output", final_images=None):
