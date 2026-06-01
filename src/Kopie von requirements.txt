@@ -1,0 +1,10 @@
+git+https://github.com/sethblack/python-seo-analyzer.git
+spacy==3.5.0
+nltk==3.6.7
+langchain_anthropic
+python-dotenv
+pypandoc
+playwright
+seaborn
+wordcloud
+pydantic==1.10.0
